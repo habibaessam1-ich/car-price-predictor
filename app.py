@@ -37,3 +37,9 @@ if st.button("احسب السعر المتوقع 💰", use_container_width=True
     
     predicted_price = pipeline.predict(input_data)[0]
     st.success(f"السعر التقديري للسيارة: **{predicted_price:,.2f} جنيه**")
+
+
+st.markdown("---")
+st.write("👨‍💻 **Developed by:**")
+st.write("- Habiba Essam")
+st.write("- Salma Ahmed")
