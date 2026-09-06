@@ -40,6 +40,6 @@ if st.button("احسب السعر المتوقع 💰", use_container_width=True
 
 
 st.markdown("---")
-st.write("👨‍💻 **Developed by:**")
+st.write("👩‍💻**Developed by:**")
 st.write("- Habiba Essam")
 st.write("- Salma Ahmed")
