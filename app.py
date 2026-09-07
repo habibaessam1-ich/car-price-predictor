@@ -20,6 +20,7 @@ st.write("Enter the car specifications to get the estimated price.")
 
 brand = st.selectbox("Car Brand", ["Toyota", "Hyundai", "Kia", "Nissan", "Chevrolet", "BMW", "Mercedes"])
 car_type = st.selectbox("Car Type / Model", ["Sedan", "SUV", "Hatchback", "Coupe"])
+transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
 
 col1, col2 = st.columns(2)
 
@@ -33,12 +34,14 @@ with col2:
 st.markdown("---")
 
 if st.button("Predict Price"):
+    # أسماء الأعمدة مطابقة تماماً لما يتوقعه الموديل
     input_data = pd.DataFrame({
         'brand': [brand],
         'car_type': [car_type],
-        'year': [year],
-        'fuel_type': [fuel_type],
-        'km_driven': [km_driven]
+        'Year': [year],
+        'Fuel_Type': [fuel_type],
+        'KM_Driven': [km_driven],
+        'Transmission': [transmission]
     })
     
     try:
