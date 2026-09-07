@@ -13,7 +13,7 @@ pipeline = load_model()
 st.title("🚗 Used Car Price Prediction System")
 
 st.markdown("---")
-st.markdown("👨‍💻 **Developed by:** Habiba Essam & Salma Ahmed")
+st.markdown("👩‍💻 **Developed by:** Habiba Essam & Salma Ahmed")
 st.markdown("---")
 
 st.write("Enter the car specifications to get the estimated price.")
