@@ -34,7 +34,6 @@ with col2:
 st.markdown("---")
 
 if st.button("Predict Price"):
-    # أسماء الأعمدة مطابقة تماماً لما يتوقعه الموديل
     input_data = pd.DataFrame({
         'brand': [brand],
         'car_type': [car_type],
@@ -45,7 +44,17 @@ if st.button("Predict Price"):
     })
     
     try:
-        prediction = pipeline.predict(input_data)
-        st.success(f"The estimated car price is: {prediction[0]:,.2f} EGP")
+        base_prediction = pipeline.predict(input_data)[0]
+        
+        # معامل التصحيح لضبط الأسعار الحالية للسوق المصري
+        multiplier = 1.0
+        if brand in ["BMW", "Mercedes"] and year >= 2018:
+            multiplier = 3.5
+        elif year >= 2022:
+            multiplier = 2.0
+            
+        final_price = base_prediction * multiplier
+        
+        st.success(f"The estimated car price is: {final_price:,.2f} EGP")
     except Exception as e:
         st.error(f"An error occurred during prediction: Make sure model columns match input. Details: {e}")
