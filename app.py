@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-st.set_page_config(page_title="توقع سعر السيارة", page_icon="🚗", layout="centered")
+st.set_page_config(page_title="Car Price Predictor", page_icon="🚗", layout="centered")
 
 @st.cache_resource
 def load_model():
@@ -10,36 +10,39 @@ def load_model():
 
 pipeline = load_model()
 
-st.title("🚗 نظام التنبؤ بأسعار السيارات المستعملة")
-st.write("أدخل مواصفات السيارة للحصول على السعر التقديري المتوقع")
+st.title("🚗 Used Car Price Prediction System")
 
 st.markdown("---")
+st.markdown("👨‍💻 **Developed by:** Habiba Essam & Salma Ahmed")
+st.markdown("---")
+
+st.write("Enter the car specifications to get the estimated price.")
+
+brand = st.selectbox("Car Brand", ["Toyota", "Hyundai", "Kia", "Nissan", "Chevrolet", "BMW", "Mercedes"])
+car_type = st.selectbox("Car Type / Model", ["Sedan", "SUV", "Hatchback", "Coupe"])
 
 col1, col2 = st.columns(2)
 
 with col1:
-    year = st.number_input("سنة الصنع (Year)", min_value=2000, max_value=2026, value=2018)
-    fuel_type = st.selectbox("نوع الوقود (Fuel)", ["Petrol", "Diesel"])
+    year = st.number_input("Manufacturing Year", min_value=2000, max_value=2026, value=2018)
+    fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "Hybrid", "Electric"])
 
 with col2:
-    km_driven = st.number_input("الكيلومترات المقطوعة (KM)", min_value=0, max_value=500000, value=50000, step=5000)
-    transmission = st.radio("نوع القير (Transmission)", ["Manual", "Automatic"])
+    km_driven = st.number_input("Kilometers Driven (KM)", min_value=0, max_value=500000, value=50000)
 
 st.markdown("---")
 
-if st.button("احسب السعر المتوقع 💰", use_container_width=True):
+if st.button("Predict Price"):
     input_data = pd.DataFrame({
-        'Year': [year],
-        'KM_Driven': [km_driven],
-        'Fuel_Type': [fuel_type],
-        'Transmission': [transmission]
+        'brand': [brand],
+        'car_type': [car_type],
+        'year': [year],
+        'fuel_type': [fuel_type],
+        'km_driven': [km_driven]
     })
     
-    predicted_price = pipeline.predict(input_data)[0]
-    st.success(f"السعر التقديري للسيارة: **{predicted_price:,.2f} جنيه**")
-
-
-st.markdown("---")
-st.write("👩‍💻**Developed by:**")
-st.write("- Habiba Essam")
-st.write("- Salma Ahmed")
+    try:
+        prediction = pipeline.predict(input_data)
+        st.success(f"The estimated car price is: {prediction[0]:,.2f} EGP")
+    except Exception as e:
+        st.error(f"An error occurred during prediction: Make sure model columns match input. Details: {e}")
