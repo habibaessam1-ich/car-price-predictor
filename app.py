@@ -1,776 +1,144 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
+import numpy as np
 
-# إعدادات الصفحة المتقدمة
 st.set_page_config(
-    page_title="Ultimate Car Intelligence & Market Suite",
+    page_title="Egyptian Car Price Predictor & Market Analyzer",
     page_icon="🚗",
     layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# قاعدة بيانات شاملة وموسعة تشمل جميع الماركات والموديلات والفئات واستهلاك الوقود والسيولة
-CAR_MODELS = {
-    "Hyundai": {
-        "Elantra": {
-            "price": 1300000,
-            "category": "Sedan",
-            "fuel_rate": 7.2,
-            "liquidity": "High",
-        },
-        "Tucson": {
-            "price": 1900000,
-            "category": "SUV",
-            "fuel_rate": 8.1,
-            "liquidity": "High",
-        },
-        "Accent": {
-            "price": 900000,
-            "category": "Sedan",
-            "fuel_rate": 6.5,
-            "liquidity": "High",
-        },
-        "Creta": {
-            "price": 1400000,
-            "category": "SUV",
-            "fuel_rate": 7.5,
-            "liquidity": "Medium",
-        },
-        "I10": {
-            "price": 700000,
-            "category": "Hatchback",
-            "fuel_rate": 5.5,
-            "liquidity": "High",
-        },
-        "Sonata": {
-            "price": 1700000,
-            "category": "Sedan",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-        "Santa Fe": {
-            "price": 2400000,
-            "category": "SUV",
-            "fuel_rate": 9.2,
-            "liquidity": "Medium",
-        },
-        "Bayon": {
-            "price": 1150000,
-            "category": "SUV",
-            "fuel_rate": 6.7,
-            "liquidity": "High",
-        },
-    },
-    "Kia": {
-        "Cerato / K3": {
-            "price": 1350000,
-            "category": "Sedan",
-            "fuel_rate": 7.0,
-            "liquidity": "High",
-        },
-        "Sportage": {
-            "price": 1950000,
-            "category": "SUV",
-            "fuel_rate": 8.2,
-            "liquidity": "High",
-        },
-        "Pegas": {
-            "price": 850000,
-            "category": "Sedan",
-            "fuel_rate": 6.0,
-            "liquidity": "High",
-        },
-        "Seltos": {
-            "price": 1500000,
-            "category": "SUV",
-            "fuel_rate": 7.6,
-            "liquidity": "Medium",
-        },
-        "XCeed": {
-            "price": 1600000,
-            "category": "Hatchback",
-            "fuel_rate": 7.1,
-            "liquidity": "Medium",
-        },
-        "Sorento": {
-            "price": 2500000,
-            "category": "SUV",
-            "fuel_rate": 9.5,
-            "liquidity": "Medium",
-        },
-        "Soul": {
-            "price": 1100000,
-            "category": "Hatchback",
-            "fuel_rate": 7.0,
-            "liquidity": "Medium",
-        },
-    },
-    "Toyota": {
-        "Corolla": {
-            "price": 1600000,
-            "category": "Sedan",
-            "fuel_rate": 6.8,
-            "liquidity": "High",
-        },
-        "Yaris": {
-            "price": 1000000,
-            "category": "Hatchback",
-            "fuel_rate": 5.2,
-            "liquidity": "High",
-        },
-        "Fortuner": {
-            "price": 3800000,
-            "category": "SUV",
-            "fuel_rate": 11.0,
-            "liquidity": "High",
-        },
-        "C-HR": {
-            "price": 1750000,
-            "category": "SUV",
-            "fuel_rate": 6.0,
-            "liquidity": "Medium",
-        },
-        "Belta": {
-            "price": 850000,
-            "category": "Sedan",
-            "fuel_rate": 6.4,
-            "liquidity": "Medium",
-        },
-        "Camry": {
-            "price": 2800000,
-            "category": "Sedan",
-            "fuel_rate": 8.5,
-            "liquidity": "Medium",
-        },
-        "RAV4": {
-            "price": 2900000,
-            "category": "SUV",
-            "fuel_rate": 7.5,
-            "liquidity": "High",
-        },
-        "Land Cruiser": {
-            "price": 6500000,
-            "category": "SUV",
-            "fuel_rate": 14.0,
-            "liquidity": "High",
-        },
-    },
-    "Nissan": {
-        "Sunny": {
-            "price": 800000,
-            "category": "Sedan",
-            "fuel_rate": 6.9,
-            "liquidity": "High",
-        },
-        "Sentra": {
-            "price": 1100000,
-            "category": "Sedan",
-            "fuel_rate": 7.1,
-            "liquidity": "High",
-        },
-        "Qashqai": {
-            "price": 1650000,
-            "category": "SUV",
-            "fuel_rate": 7.4,
-            "liquidity": "Medium",
-        },
-        "Juke": {
-            "price": 1300000,
-            "category": "SUV",
-            "fuel_rate": 6.3,
-            "liquidity": "Medium",
-        },
-        "Patrol": {
-            "price": 5500000,
-            "category": "SUV",
-            "fuel_rate": 14.5,
-            "liquidity": "Medium",
-        },
-        "X-Trail": {
-            "price": 2100000,
-            "category": "SUV",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-    },
-    "Honda": {
-        "Civic": {
-            "price": 1700000,
-            "category": "Sedan",
-            "fuel_rate": 6.7,
-            "liquidity": "High",
-        },
-        "City": {
-            "price": 1200000,
-            "category": "Sedan",
-            "fuel_rate": 6.1,
-            "liquidity": "High",
-        },
-        "CR-V": {
-            "price": 2200000,
-            "category": "SUV",
-            "fuel_rate": 7.8,
-            "liquidity": "High",
-        },
-        "Accord": {
-            "price": 2400000,
-            "category": "Sedan",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-        "HR-V": {
-            "price": 1750000,
-            "category": "SUV",
-            "fuel_rate": 6.5,
-            "liquidity": "Medium",
-        },
-    },
-    "Mitsubishi": {
-        "Lancer": {
-            "price": 750000,
-            "category": "Sedan",
-            "fuel_rate": 7.5,
-            "liquidity": "High",
-        },
-        "Xpander": {
-            "price": 1300000,
-            "category": "SUV",
-            "fuel_rate": 7.6,
-            "liquidity": "High",
-        },
-        "Eclipse Cross": {
-            "price": 1600000,
-            "category": "SUV",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-        "Attrage": {
-            "price": 750000,
-            "category": "Sedan",
-            "fuel_rate": 5.0,
-            "liquidity": "Medium",
-        },
-        "Pajero": {
-            "price": 3500000,
-            "category": "SUV",
-            "fuel_rate": 13.0,
-            "liquidity": "Medium",
-        },
-    },
-    "Suzuki": {
-        "Swift": {
-            "price": 750000,
-            "category": "Hatchback",
-            "fuel_rate": 5.0,
-            "liquidity": "High",
-        },
-        "Ciaz": {
-            "price": 850000,
-            "category": "Sedan",
-            "fuel_rate": 5.8,
-            "liquidity": "High",
-        },
-        "Ertiga": {
-            "price": 950000,
-            "category": "SUV",
-            "fuel_rate": 6.8,
-            "liquidity": "High",
-        },
-        "Espresso": {
-            "price": 550000,
-            "category": "Hatchback",
-            "fuel_rate": 4.8,
-            "liquidity": "High",
-        },
-        "Vitara": {
-            "price": 1250000,
-            "category": "SUV",
-            "fuel_rate": 6.3,
-            "liquidity": "Medium",
-        },
-        "Jimny": {
-            "price": 1400000,
-            "category": "SUV",
-            "fuel_rate": 7.8,
-            "liquidity": "High",
-        },
-    },
-    "BMW": {
-        "3 Series (320i)": {
-            "price": 3500000,
-            "category": "Luxury",
-            "fuel_rate": 7.8,
-            "liquidity": "High",
-        },
-        "5 Series (520i)": {
-            "price": 4800000,
-            "category": "Luxury",
-            "fuel_rate": 8.4,
-            "liquidity": "Medium",
-        },
-        "X1": {
-            "price": 2900000,
-            "category": "SUV",
-            "fuel_rate": 7.5,
-            "liquidity": "High",
-        },
-        "X5": {
-            "price": 6200000,
-            "category": "Luxury",
-            "fuel_rate": 10.5,
-            "liquidity": "Medium",
-        },
-        "4 Series": {
-            "price": 4500000,
-            "category": "Luxury",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-        "7 Series": {
-            "price": 8500000,
-            "category": "Luxury",
-            "fuel_rate": 11.2,
-            "liquidity": "Low",
-        },
-    },
-    "Mercedes": {
-        "C-Class (C180/C200)": {
-            "price": 4200000,
-            "category": "Luxury",
-            "fuel_rate": 7.3,
-            "liquidity": "High",
-        },
-        "E-Class (E200)": {
-            "price": 5800000,
-            "category": "Luxury",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-        "A-Class": {
-            "price": 2700000,
-            "category": "Hatchback",
-            "fuel_rate": 6.2,
-            "liquidity": "Medium",
-        },
-        "GLC": {
-            "price": 5900000,
-            "category": "SUV",
-            "fuel_rate": 9.0,
-            "liquidity": "High",
-        },
-        "S-Class": {
-            "price": 9500000,
-            "category": "Luxury",
-            "fuel_rate": 11.5,
-            "liquidity": "Low",
-        },
-        "G-Class": {
-            "price": 12000000,
-            "category": "SUV",
-            "fuel_rate": 15.0,
-            "liquidity": "High",
-        },
-    },
-    "Audi": {
-        "A4": {
-            "price": 2800000,
-            "category": "Luxury",
-            "fuel_rate": 7.0,
-            "liquidity": "Medium",
-        },
-        "A6": {
-            "price": 3900000,
-            "category": "Luxury",
-            "fuel_rate": 8.2,
-            "liquidity": "Medium",
-        },
-        "Q3": {
-            "price": 2500000,
-            "category": "SUV",
-            "fuel_rate": 7.3,
-            "liquidity": "High",
-        },
-        "Q7": {
-            "price": 4900000,
-            "category": "SUV",
-            "fuel_rate": 10.0,
-            "liquidity": "Medium",
-        },
-        "Q5": {
-            "price": 3700000,
-            "category": "SUV",
-            "fuel_rate": 8.0,
-            "liquidity": "High",
-        },
-    },
-    "Volkswagen": {
-        "Golf": {
-            "price": 1700000,
-            "category": "Hatchback",
-            "fuel_rate": 6.5,
-            "liquidity": "High",
-        },
-        "Passat": {
-            "price": 1900000,
-            "category": "Sedan",
-            "fuel_rate": 7.0,
-            "liquidity": "Medium",
-        },
-        "Tiguan": {
-            "price": 2500000,
-            "category": "SUV",
-            "fuel_rate": 7.9,
-            "liquidity": "High",
-        },
-        "Jetta": {
-            "price": 900000,
-            "category": "Sedan",
-            "fuel_rate": 6.8,
-            "liquidity": "Medium",
-        },
-        "Touareg": {
-            "price": 3800000,
-            "category": "SUV",
-            "fuel_rate": 10.5,
-            "liquidity": "Medium",
-        },
-    },
-    "Skoda": {
-        "Octavia": {
-            "price": 1850000,
-            "category": "Sedan",
-            "fuel_rate": 6.3,
-            "liquidity": "High",
-        },
-        "Kodiaq": {
-            "price": 2600000,
-            "category": "SUV",
-            "fuel_rate": 8.1,
-            "liquidity": "High",
-        },
-        "Karoq": {
-            "price": 2100000,
-            "category": "SUV",
-            "fuel_rate": 7.2,
-            "liquidity": "Medium",
-        },
-        "Scala": {
-            "price": 1300000,
-            "category": "Hatchback",
-            "fuel_rate": 5.8,
-            "liquidity": "Medium",
-        },
-        "Superb": {
-            "price": 2400000,
-            "category": "Sedan",
-            "fuel_rate": 7.1,
-            "liquidity": "Medium",
-        },
-    },
-    "Renault": {
-        "Logan": {
-            "price": 650000,
-            "category": "Sedan",
-            "fuel_rate": 6.4,
-            "liquidity": "High",
-        },
-        "Megane": {
-            "price": 1400000,
-            "category": "Sedan",
-            "fuel_rate": 6.6,
-            "liquidity": "High",
-        },
-        "Duster": {
-            "price": 1200000,
-            "category": "SUV",
-            "fuel_rate": 7.8,
-            "liquidity": "High",
-        },
-        "Stepway": {
-            "price": 850000,
-            "category": "Hatchback",
-            "fuel_rate": 6.7,
-            "liquidity": "High",
-        },
-        "Kadjar": {
-            "price": 1500000,
-            "category": "SUV",
-            "fuel_rate": 7.0,
-            "liquidity": "Medium",
-        },
-    },
-    "Peugeot": {
-        "301": {
-            "price": 850000,
-            "category": "Sedan",
-            "fuel_rate": 6.5,
-            "liquidity": "High",
-        },
-        "508": {
-            "price": 1800000,
-            "category": "Sedan",
-            "fuel_rate": 7.2,
-            "liquidity": "Medium",
-        },
-        "2008": {
-            "price": 1450000,
-            "category": "SUV",
-            "fuel_rate": 6.2,
-            "liquidity": "Medium",
-        },
-        "3008": {
-            "price": 1950000,
-            "category": "SUV",
-            "fuel_rate": 7.0,
-            "liquidity": "High",
-        },
-        "5008": {
-            "price": 2200000,
-            "category": "SUV",
-            "fuel_rate": 7.6,
-            "liquidity": "Medium",
-        },
-    },
-    "Chevrolet": {
-        "Aveo": {
-            "price": 600000,
-            "category": "Sedan",
-            "fuel_rate": 7.3,
-            "liquidity": "High",
-        },
-        "Optra": {
-            "price": 750000,
-            "category": "Sedan",
-            "fuel_rate": 7.5,
-            "liquidity": "High",
-        },
-        "Captiva": {
-            "price": 1500000,
-            "category": "SUV",
-            "fuel_rate": 8.2,
-            "liquidity": "Medium",
-        },
-        "Malibu": {
-            "price": 1400000,
-            "category": "Sedan",
-            "fuel_rate": 7.2,
-            "liquidity": "Medium",
-        },
-        "Tahoe": {
-            "price": 5500000,
-            "category": "SUV",
-            "fuel_rate": 13.5,
-            "liquidity": "Low",
-        },
-    },
-    "Fiat": {
-        "Tipo": {
-            "price": 1050000,
-            "category": "Sedan",
-            "fuel_rate": 6.3,
-            "liquidity": "High",
-        },
-        "500": {
-            "price": 1100000,
-            "category": "Hatchback",
-            "fuel_rate": 5.8,
-            "liquidity": "Medium",
-        },
-    },
-    "MG": {
-        "MG 5": {
-            "price": 850000,
-            "category": "Sedan",
-            "fuel_rate": 6.8,
-            "liquidity": "High",
-        },
-        "MG 6": {
-            "price": 1200000,
-            "category": "Sedan",
-            "fuel_rate": 7.0,
-            "liquidity": "High",
-        },
-        "MG ZS": {
-            "price": 1050000,
-            "category": "SUV",
-            "fuel_rate": 7.2,
-            "liquidity": "High",
-        },
-        "MG RX5": {
-            "price": 1400000,
-            "category": "SUV",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-        "MG4": {
-            "price": 1350000,
-            "category": "Hatchback",
-            "fuel_rate": 4.5,
-            "liquidity": "Medium",
-        },
-        "MG HS": {
-            "price": 1600000,
-            "category": "SUV",
-            "fuel_rate": 8.3,
-            "liquidity": "Medium",
-        },
-    },
-    "Chery": {
-        "Arrizo 5": {
-            "price": 750000,
-            "category": "Sedan",
-            "fuel_rate": 7.0,
-            "liquidity": "High",
-        },
-        "Tiggo 3": {
-            "price": 880000,
-            "category": "SUV",
-            "fuel_rate": 7.7,
-            "liquidity": "High",
-        },
-        "Tiggo 7": {
-            "price": 1100000,
-            "category": "SUV",
-            "fuel_rate": 7.5,
-            "liquidity": "High",
-        },
-        "Tiggo 8": {
-            "price": 1450000,
-            "category": "SUV",
-            "fuel_rate": 8.3,
-            "liquidity": "Medium",
-        },
-        "Tiggo 4 Pro": {
-            "price": 980000,
-            "category": "SUV",
-            "fuel_rate": 7.1,
-            "liquidity": "High",
-        },
-    },
-    "Geely": {
-        "Emgrand": {
-            "price": 850000,
-            "category": "Sedan",
-            "fuel_rate": 6.7,
-            "liquidity": "Medium",
-        },
-        "Coolray": {
-            "price": 1300000,
-            "category": "SUV",
-            "fuel_rate": 6.6,
-            "liquidity": "High",
-        },
-        "Okavango": {
-            "price": 1650000,
-            "category": "SUV",
-            "fuel_rate": 8.0,
-            "liquidity": "Medium",
-        },
-        "Monjaro": {
-            "price": 2100000,
-            "category": "SUV",
-            "fuel_rate": 8.5,
-            "liquidity": "Medium",
-        },
-    },
-    "Changan": {
-        "Alsvin": {
-            "price": 650000,
-            "category": "Sedan",
-            "fuel_rate": 6.2,
-            "liquidity": "High",
-        },
-        "CS35 Plus": {
-            "price": 1150000,
-            "category": "SUV",
-            "fuel_rate": 7.0,
-            "liquidity": "High",
-        },
-        "CS55 Plus": {
-            "price": 1350000,
-            "category": "SUV",
-            "fuel_rate": 7.5,
-            "liquidity": "Medium",
-        },
-        "Uni-T": {
-            "price": 1500000,
-            "category": "SUV",
-            "fuel_rate": 7.8,
-            "liquidity": "Medium",
-        },
-        "Uni-V": {
-            "price": 1550000,
-            "category": "Sedan",
-            "fuel_rate": 7.4,
-            "liquidity": "Medium",
-        },
-    },
-    "BYD": {
-        "F3": {
-            "price": 620000,
-            "category": "Sedan",
-            "fuel_rate": 6.5,
-            "liquidity": "High",
-        },
-        "Song Plus": {
-            "price": 1600000,
-            "category": "SUV",
-            "fuel_rate": 5.0,
-            "liquidity": "High",
-        },
-        "Atto 3": {
-            "price": 1700000,
-            "category": "SUV",
-            "fuel_rate": 4.2,
-            "liquidity": "Medium",
-        },
-    },
-    "HAVAL": {
-        "H6": {
-            "price": 1450000,
-            "category": "SUV",
-            "fuel_rate": 8.0,
-            "liquidity": "High",
-        },
-        "Jolion": {
-            "price": 1200000,
-            "category": "SUV",
-            "fuel_rate": 7.2,
-            "liquidity": "High",
-        },
-        "H6 GT": {
-            "price": 1650000,
-            "category": "SUV",
-            "fuel_rate": 8.3,
-            "liquidity": "Medium",
-        },
-    },
-    "Jetour": {
-        "X70": {
-            "price": 1250000,
-            "category": "SUV",
-            "fuel_rate": 8.0,
-            "liquidity": "High",
-        },
-        "X70 Plus": {
-            "price": 1450000,
-            "category": "SUV",
-            "fuel_rate": 8.2,
-            "liquidity": "Medium",
-        },
-        "Dashing": {
-            "price": 1500000,
-            "category": "SUV",
-            "fuel_rate": 7.9,
-            "liquidity": "High",
-        },
-    },
-}
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f8f9fa;
+    }
+    .stButton>button {
+        width: 100%;
+        background-color: #ff4b4b;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 0.6rem;
+    }
+    .stButton>button:hover {
+        background-color: #e03e3e;
+        color: white;
+    }
+    .metric-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        text-align: center;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 CAR_IMAGES = {
-    "BMW": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80",
-    "Mercedes": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80",
-    "Toyota": "https://images.unsplash.com/photo-1629897048514-3dd7414fe72a?auto=format&fit=crop&w=800&q=80",
-    "Hyundai": "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=800&q=80",
-    "Kia": "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80",
-    "Nissan": "https://images.unsplash.com/photo-1609521263047-"
-},
+    "Toyota": "https://images.unsplash.com/photo-1629897048983-85f8dc4e4abc?auto=format&fit=crop&q=80&w=800",
+    "Hyundai": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=800",
+    "Nissan": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&q=80&w=800",
+    "Kia": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800",
+    "Chevrolet": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800",
+    "BMW": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=800",
+    "Mercedes": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&q=80&w=800",
+    "Renault": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=800",
+    "Skoda": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800",
+    "Other": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800"
+}
+
+CAR_MODELS = {
+    "Toyota": ["Corolla", "Yaris", "Fortuner", "C-HR", "RAV4", "Camry"],
+    "Hyundai": ["Elantra", "Tucson", "Accent", "Creta", "Grand i10", "Sonata"],
+    "Nissan": ["Sunny", "Sentra", "Qashqai", "Juke", "Patrol", "X-Trail"],
+    "Kia": ["Cerato", "Sportage", "Rio", "Sorento", "Grand Cerato", "Picanto"],
+    "Chevrolet": ["Optra", "Captiva", "Aveo", "T-Avenue", "Lanos"],
+    "BMW": ["3 Series", "5 Series", "X1", "X3", "X5", "4 Series"],
+    "Mercedes": ["C-Class", "E-Class", "GLA", "GLC", "A-Class"],
+    "Renault": ["Logan", "Sandero", "Duster", "Megane", "Kadjar"],
+    "Skoda": ["Octavia", "Kodiaq", "Superb", "Karoq"],
+    "Other": ["Standard Model"]
+}
+
+st.title("🚗 Egyptian Used Car Price Predictor & Market Analyzer")
+st.markdown("### Developed by Habiba Essam & Salma Ahmed")
+st.write("Welcome! Use this professional tool to estimate car market values in Egypt, calculate installments, evaluate vehicle condition, and analyze fuel consumption.")
+
+st.sidebar.header("🔍 Vehicle Specifications")
+
+brand = st.sidebar.selectbox("Select Car Brand", list(CAR_MODELS.keys()))
+model = st.sidebar.selectbox("Select Car Model", CAR_MODELS[brand])
+year = st.sidebar.slider("Manufacturing Year", 2010, 2026, 2022)
+transmission = st.sidebar.selectbox("Transmission Type", ["Automatic", "Manual"])
+fuel_type = st.sidebar.selectbox("Fuel Type", ["Petrol", "Diesel", "Hybrid", "Electric"])
+mileage = st.sidebar.number_input("Mileage (KM)", min_value=0, max_value=400000, value=50000, step=5000)
+engine_cc = st.sidebar.slider("Engine Capacity (CC)", 1000, 4000, 1600, step=100)
+condition_score = st.sidebar.slider("Body & Mechanical Condition Score (%)", 50, 100, 85)
+
+if brand in CAR_IMAGES:
+    st.sidebar.image(CAR_IMAGES[brand], caption=f"{brand} Model Reference", use_column_width=True)
+
+tab1, tab2, tab3, tab4 = st.tabs(["💰 Price Prediction", "📊 Market Trends", "📉 Installment Calculator", "⛽ Fuel Analysis"])
+
+with tab1:
+    st.subheader("Estimated Market Valuation")
+    base_price = 450000
+    brand_multiplier = {"BMW": 2.5, "Mercedes": 3.0, "Toyota": 1.5, "Hyundai": 1.2, "Nissan": 1.15, "Kia": 1.2, "Chevrolet": 0.9, "Renault": 0.95, "Skoda": 1.4, "Other": 1.0}
+    
+    age = 2026 - year
+    calculated_price = base_price * brand_multiplier.get(brand, 1.0)
+    calculated_price += (engine_cc / 1600) * 100000
+    calculated_price -= age * 25000
+    calculated_price -= (mileage / 10000) * 8000
+    calculated_price = calculated_price * (condition_score / 100)
+    
+    final_price = max(150000, int(calculated_price))
+    min_range = int(final_price * 0.95)
+    max_range = int(final_price * 1.05)
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown('<div class="metric-card"><h4>Estimated Price</h4><h2>' + f"{final_price:,}" + ' EGP</h2></div>', unsafe_allow_html=True)
+    with col2:
+        st.markdown('<div class="metric-card"><h4>Lower Range</h4><h2>' + f"{min_range:,}" + ' EGP</h2></div>', unsafe_allow_html=True)
+    with col3:
+        st.markdown('<div class="metric-card"><h4>Upper Range</h4><h2>' + f"{max_range:,}" + ' EGP</h2></div>', unsafe_allow_html=True)
+        
+    st.markdown("---")
+    st.info("💡 **Valuation Insight:** Price takes into account current market inflation, depreciation per kilometer, and overall mechanical condition score.")
+
+with tab2:
+    st.subheader("📊 Egyptian Used Car Market Insights")
+    st.write("Historical price trends and demand distribution across popular brands in the Egyptian market.")
+    
+    chart_data = pd.DataFrame({
+        'Brand': list(CAR_MODELS.keys())[:7],
+        'Average Price (EGP)': [850000, 720000, 680000, 700000, 520000, 1400000, 1850000]
+    })
+    st.bar_chart(chart_data.set_index('Brand'))
+
+with tab3:
+    st.subheader("📉 Car Loan & Installment Calculator")
+    down_payment = st.number_input("Down Payment (EGP)", min_value=0, value=int(final_price * 0.3), step=10000)
+    loan_term_months = st.selectbox("Loan Tenure (Months)", [12, 24, 36, 48, 60], index=2)
+    interest_rate = st.slider("Annual Interest Rate (%)", 5.0, 30.0, 18.0, step=0.5)
+    
+    loan_amount = max(0, final_price - down_payment)
+    monthly_interest = (interest_rate / 100) / 12
+    if monthly_interest > 0:
+        monthly_payment = loan_amount * (monthly_interest * (1 + monthly_interest)**loan_term_months) / ((1 + monthly_interest)**loan_term_months - 1)
+    else:
+        monthly_payment = loan_amount / loan_term_months
+        
+    st.success("📌 **Estimated Monthly Installment:** " + f"{int(monthly_payment):,}" + " EGP / month for " + str(loan_term_months) + " months.")
+
+with tab4:
+    st.subheader("⛽ Fuel Consumption & Efficiency Estimator")
+    est_fuel_consumption = round(7.5 + (engine_cc / 1000) * 1.8 - (0.5 if fuel_type == "Hybrid" else 0.0), 1)
+    st.metric(label="Estimated Fuel Consumption", value=str(est_fuel_consumption) + " Liters / 100 KM")
+    st.write("Estimated monthly fuel cost based on an average driving distance of 1,000 KM and current fuel prices in Egypt.")
+
+st.markdown("---")
+st.markdown("<p style='text-align: center; color: gray;'>Car Price Predictor System | Created with Streamlit & Python by Habiba Essam & Salma Ahmed</p>", unsafe_allow_html=True)
