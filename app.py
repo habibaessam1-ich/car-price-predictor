@@ -1,1141 +1,286 @@
-import io
-import json
 import pandas as pd
 import streamlit as st
 
-# Page Configuration
+# إعدادات الصفحة
 st.set_page_config(
-    page_title="Car Price Predictor Pro - Ultimate Edition",
-    page_icon="🚗",
-    layout="wide",
-    initial_sidebar_state="expanded",
+    page_title="Car Price Predictor", page_icon="🚗", layout="wide"
 )
 
-# Comprehensive Car Database (All Brands, Models, and Engine Options)
+# 1. قاعدة بيانات الشركات والموديلات والأسعار الأساسية
 CAR_MODELS = {
-    "Toyota": {
-        "Corolla": {
-            "engines": ["1.6L Normal", "1.8L Hybrid"],
-            "base_price": 1600000,
-            "body": "Sedan",
-            "hp": 120,
-        },
-        "Yaris": {
-            "engines": ["1.5L Normal"],
-            "base_price": 1000000,
-            "body": "Hatchback",
-            "hp": 118,
-        },
-        "Fortuner": {
-            "engines": ["2.7L Normal", "4.0L V6"],
-            "base_price": 3800000,
-            "body": "SUV",
-            "hp": 234,
-        },
-        "C-HR": {
-            "engines": ["1.2L Turbo", "1.8L Hybrid"],
-            "base_price": 1750000,
-            "body": "SUV",
-            "hp": 113,
-        },
-        "Belta": {
-            "engines": ["1.5L Normal"],
-            "base_price": 850000,
-            "body": "Sedan",
-            "hp": 103,
-        },
-        "RAV4": {
-            "engines": ["2.5L Hybrid"],
-            "base_price": 2800000,
-            "body": "SUV",
-            "hp": 219,
-        },
-        "Land Cruiser": {
-            "engines": ["3.3L Twin-Turbo V6", "4.0L V6"],
-            "base_price": 7500000,
-            "body": "SUV",
-            "hp": 409,
-        },
+    "Chevrolet": {
+        "Aveo": 600000,
+        "Optra": 750000,
+        "Cruze": 650000,
+        "Captiva": 1500000,
     },
     "Nissan": {
-        "Sunny": {
-            "engines": ["1.5L Normal"],
-            "base_price": 800000,
-            "body": "Sedan",
-            "hp": 108,
-        },
-        "Sentra": {
-            "engines": ["1.6L Normal"],
-            "base_price": 1100000,
-            "body": "Sedan",
-            "hp": 118,
-        },
-        "Qashqai": {
-            "engines": ["1.3L Turbo"],
-            "base_price": 1650000,
-            "body": "SUV",
-            "hp": 148,
-        },
-        "Juke": {
-            "engines": ["1.0L Turbo"],
-            "base_price": 1300000,
-            "body": "SUV",
-            "hp": 114,
-        },
-        "Patrol": {
-            "engines": ["5.6L V8"],
-            "base_price": 6800000,
-            "body": "SUV",
-            "hp": 400,
-        },
+        "Sunny": 800000,
+        "Sentra": 1100000,
+        "Qashqai": 1650000,
+        "Juke": 1300000,
+    },
+    "Toyota": {
+        "Corolla": 1600000,
+        "Yaris": 1000000,
+        "Fortuner": 3800000,
+        "C-HR": 1750000,
+        "Belta": 850000,
     },
     "Hyundai": {
-        "Elantra": {
-            "engines": ["1.6L Normal"],
-            "base_price": 1300000,
-            "body": "Sedan",
-            "hp": 127,
-        },
-        "Tucson": {
-            "engines": ["1.6L Turbo"],
-            "base_price": 1900000,
-            "body": "SUV",
-            "hp": 180,
-        },
-        "Accent": {
-            "engines": ["1.4L Normal"],
-            "base_price": 900000,
-            "body": "Sedan",
-            "hp": 100,
-        },
-        "Creta": {
-            "engines": ["1.5L Normal"],
-            "base_price": 1400000,
-            "body": "SUV",
-            "hp": 113,
-        },
-        "i10": {
-            "engines": ["1.2L Normal"],
-            "base_price": 700000,
-            "body": "Hatchback",
-            "hp": 84,
-        },
-        "Santa Fe": {
-            "engines": ["2.5L Normal", "1.6L Turbo Hybrid"],
-            "base_price": 2700000,
-            "body": "SUV",
-            "hp": 194,
-        },
-        "Sonata": {
-            "engines": ["2.5L Normal"],
-            "base_price": 2100000,
-            "body": "Sedan",
-            "hp": 191,
-        },
+        "Elantra": 1300000,
+        "Tucson": 1900000,
+        "Accent": 900000,
+        "Creta": 1400000,
+        "I10": 700000,
     },
     "Kia": {
-        "Cerato / K3": {
-            "engines": ["1.6L Normal"],
-            "base_price": 1350000,
-            "body": "Sedan",
-            "hp": 130,
-        },
-        "Sportage": {
-            "engines": ["1.6L Turbo"],
-            "base_price": 1950000,
-            "body": "SUV",
-            "hp": 177,
-        },
-        "Pegas": {
-            "engines": ["1.4L Normal"],
-            "base_price": 850000,
-            "body": "Sedan",
-            "hp": 95,
-        },
-        "Seltos": {
-            "engines": ["1.4L Turbo", "1.5L Normal"],
-            "base_price": 1500000,
-            "body": "SUV",
-            "hp": 140,
-        },
-        "Sorento": {
-            "engines": ["2.5L Normal", "1.6L Turbo Hybrid"],
-            "base_price": 2900000,
-            "body": "SUV",
-            "hp": 191,
-        },
-        "Carnival": {
-            "engines": ["3.5L V6"],
-            "base_price": 3200000,
-            "body": "Van",
-            "hp": 290,
-        },
-    },
-    "MG": {
-        "MG 5": {
-            "engines": ["1.5L Normal"],
-            "base_price": 850000,
-            "body": "Sedan",
-            "hp": 118,
-        },
-        "MG 6": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1200000,
-            "body": "Sedan",
-            "hp": 169,
-        },
-        "MG ZS": {
-            "engines": ["1.5L Normal"],
-            "base_price": 1050000,
-            "body": "SUV",
-            "hp": 119,
-        },
-        "MG RX5": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1400000,
-            "body": "SUV",
-            "hp": 171,
-        },
-        "MG 4 EV": {
-            "engines": ["Electric EV"],
-            "base_price": 1350000,
-            "body": "Hatchback",
-            "hp": 170,
-        },
-        "MG Whale": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 1600000,
-            "body": "SUV",
-            "hp": 231,
-        },
-    },
-    "Chery": {
-        "Arrizo 5": {
-            "engines": ["1.5L Normal"],
-            "base_price": 750000,
-            "body": "Sedan",
-            "hp": 114,
-        },
-        "Tiggo 3": {
-            "engines": ["1.6L Normal"],
-            "base_price": 880000,
-            "body": "SUV",
-            "hp": 126,
-        },
-        "Tiggo 7": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1100000,
-            "body": "SUV",
-            "hp": 145,
-        },
-        "Tiggo 8 Pro": {
-            "engines": ["1.5L Turbo", "1.6L Turbo"],
-            "base_price": 1450000,
-            "body": "SUV",
-            "hp": 145,
-        },
-        "Arrizo 8": {
-            "engines": ["1.6L Turbo"],
-            "base_price": 1250000,
-            "body": "Sedan",
-            "hp": 194,
-        },
-    },
-    "BYD": {
-        "F3": {
-            "engines": ["1.5L Normal"],
-            "base_price": 620000,
-            "body": "Sedan",
-            "hp": 108,
-        },
-        "Song Plus Hybrid": {
-            "engines": ["1.5L Hybrid"],
-            "base_price": 1600000,
-            "body": "SUV",
-            "hp": 197,
-        },
-        "Yuan Plus": {
-            "engines": ["Electric EV"],
-            "base_price": 1700000,
-            "body": "SUV",
-            "hp": 201,
-        },
-    },
-    "Changan": {
-        "Alsvin": {
-            "engines": ["1.4L Normal", "1.5L Normal"],
-            "base_price": 650000,
-            "body": "Sedan",
-            "hp": 107,
-        },
-        "CS35 Plus": {
-            "engines": ["1.4L Turbo"],
-            "base_price": 1150000,
-            "body": "SUV",
-            "hp": 158,
-        },
-        "CS55 Plus": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1350000,
-            "body": "SUV",
-            "hp": 185,
-        },
-        "Uni-K": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 1950000,
-            "body": "SUV",
-            "hp": 233,
-        },
-        "Uni-T": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1450000,
-            "body": "SUV",
-            "hp": 177,
-        },
-    },
-    "Geely": {
-        "Emgrand": {
-            "engines": ["1.5L Normal"],
-            "base_price": 850000,
-            "body": "Sedan",
-            "hp": 102,
-        },
-        "Coolray": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1300000,
-            "body": "SUV",
-            "hp": 175,
-        },
-        "Okavango": {
-            "engines": ["1.5L Hybrid"],
-            "base_price": 1650000,
-            "body": "SUV",
-            "hp": 190,
-        },
-        "Monjaro": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 2200000,
-            "body": "SUV",
-            "hp": 235,
-        },
-    },
-    "Skoda": {
-        "Octavia": {
-            "engines": ["1.4L Turbo", "2.0L Turbo"],
-            "base_price": 1850000,
-            "body": "Sedan",
-            "hp": 150,
-        },
-        "Kodiaq": {
-            "engines": ["1.4L Turbo", "2.0L Turbo"],
-            "base_price": 2600000,
-            "body": "SUV",
-            "hp": 150,
-        },
-        "Karoq": {
-            "engines": ["1.4L Turbo"],
-            "base_price": 2100000,
-            "body": "SUV",
-            "hp": 150,
-        },
-        "Scala": {
-            "engines": ["1.6L Normal"],
-            "base_price": 1300000,
-            "body": "Hatchback",
-            "hp": 110,
-        },
-        "Superb": {
-            "engines": ["1.4L Turbo", "2.0L Turbo"],
-            "base_price": 2300000,
-            "body": "Sedan",
-            "hp": 150,
-        },
-    },
-    "BMW": {
-        "3 Series (320i)": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 3500000,
-            "body": "Sedan",
-            "hp": 184,
-        },
-        "5 Series (520i)": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 4800000,
-            "body": "Sedan",
-            "hp": 184,
-        },
-        "X1": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 2900000,
-            "body": "SUV",
-            "hp": 140,
-        },
-        "X5": {
-            "engines": ["3.0L Turbo"],
-            "base_price": 6200000,
-            "body": "SUV",
-            "hp": 340,
-        },
-        "7 Series": {
-            "engines": ["3.0L Turbo Hybrid"],
-            "base_price": 8500000,
-            "body": "Sedan",
-            "hp": 380,
-        },
-        "X3": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 4100000,
-            "body": "SUV",
-            "hp": 252,
-        },
-    },
-    "Mercedes-Benz": {
-        "C-Class (C180 / C200)": {
-            "engines": ["1.5L Turbo", "2.0L Turbo"],
-            "base_price": 4200000,
-            "body": "Sedan",
-            "hp": 170,
-        },
-        "E-Class (E200)": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 5800000,
-            "body": "Sedan",
-            "hp": 197,
-        },
-        "GLC": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 5900000,
-            "body": "SUV",
-            "hp": 204,
-        },
-        "A-Class": {
-            "engines": ["1.3L Turbo"],
-            "base_price": 2700000,
-            "body": "Hatchback",
-            "hp": 136,
-        },
-        "S-Class": {
-            "engines": ["3.0L Turbo", "4.0L V8"],
-            "base_price": 9500000,
-            "body": "Sedan",
-            "hp": 435,
-        },
-        "GLE": {
-            "engines": ["2.0L Turbo", "3.0L Turbo"],
-            "base_price": 6800000,
-            "body": "SUV",
-            "hp": 255,
-        },
-    },
-    "Audi": {
-        "A4": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 2800000,
-            "body": "Sedan",
-            "hp": 190,
-        },
-        "A6": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 3900000,
-            "body": "Sedan",
-            "hp": 245,
-        },
-        "Q3": {
-            "engines": ["1.4L Turbo"],
-            "base_price": 2500000,
-            "body": "SUV",
-            "hp": 150,
-        },
-        "Q7": {
-            "engines": ["3.0L Turbo"],
-            "base_price": 4900000,
-            "body": "SUV",
-            "hp": 340,
-        },
-        "Q8": {
-            "engines": ["3.0L Turbo"],
-            "base_price": 5800000,
-            "body": "SUV",
-            "hp": 340,
-        },
-    },
-    "Chevrolet": {
-        "Optra": {
-            "engines": ["1.5L Normal"],
-            "base_price": 750000,
-            "body": "Sedan",
-            "hp": 110,
-        },
-        "Captiva": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1500000,
-            "body": "SUV",
-            "hp": 148,
-        },
-        "Aveo": {
-            "engines": ["1.5L Normal"],
-            "base_price": 600000,
-            "body": "Sedan",
-            "hp": 105,
-        },
-        "Groove": {
-            "engines": ["1.5L Normal"],
-            "base_price": 1000000,
-            "body": "SUV",
-            "hp": 110,
-        },
-        "Trailblazer": {
-            "engines": ["1.3L Turbo"],
-            "base_price": 1350000,
-            "body": "SUV",
-            "hp": 155,
-        },
-    },
-    "Renault": {
-        "Megane": {
-            "engines": ["1.6L Normal", "1.3L Turbo"],
-            "base_price": 1400000,
-            "body": "Sedan",
-            "hp": 115,
-        },
-        "Logan": {
-            "engines": ["1.6L Normal"],
-            "base_price": 650000,
-            "body": "Sedan",
-            "hp": 110,
-        },
-        "Duster": {
-            "engines": ["1.6L Normal"],
-            "base_price": 1200000,
-            "body": "SUV",
-            "hp": 115,
-        },
-        "Sandero Stepway": {
-            "engines": ["1.6L Normal"],
-            "base_price": 850000,
-            "body": "Hatchback",
-            "hp": 110,
-        },
-        "Austral": {
-            "engines": ["1.3L Turbo Hybrid"],
-            "base_price": 1750000,
-            "body": "SUV",
-            "hp": 200,
-        },
-    },
-    "Fiat": {
-        "Tipo": {
-            "engines": ["1.4L Normal", "1.6L Normal"],
-            "base_price": 1050000,
-            "body": "Sedan",
-            "hp": 110,
-        },
-        "500": {
-            "engines": ["1.4L Normal"],
-            "base_price": 1100000,
-            "body": "Hatchback",
-            "hp": 100,
-        },
-    },
-    "Peugeot": {
-        "301": {
-            "engines": ["1.6L Normal"],
-            "base_price": 850000,
-            "body": "Sedan",
-            "hp": 115,
-        },
-        "508": {
-            "engines": ["1.6L Turbo"],
-            "base_price": 1800000,
-            "body": "Sedan",
-            "hp": 165,
-        },
-        "2008": {
-            "engines": ["1.2L Turbo"],
-            "base_price": 1450000,
-            "body": "SUV",
-            "hp": 130,
-        },
-        "3008": {
-            "engines": ["1.6L Turbo"],
-            "base_price": 1950000,
-            "body": "SUV",
-            "hp": 180,
-        },
-        "5008": {
-            "engines": ["1.6L Turbo"],
-            "base_price": 2200000,
-            "body": "SUV",
-            "hp": 180,
-        },
-    },
-    "Suzuki": {
-        "Swift": {
-            "engines": ["1.2L Normal"],
-            "base_price": 750000,
-            "body": "Hatchback",
-            "hp": 84,
-        },
-        "Ciaz / Dzire": {
-            "engines": ["1.2L Normal", "1.5L Normal"],
-            "base_price": 850000,
-            "body": "Sedan",
-            "hp": 104,
-        },
-        "Ertiga": {
-            "engines": ["1.5L Normal"],
-            "base_price": 950000,
-            "body": "Van",
-            "hp": 103,
-        },
-        "Grand Vitara": {
-            "engines": ["1.5L Hybrid"],
-            "base_price": 1550000,
-            "body": "SUV",
-            "hp": 103,
-        },
-        "Jimny": {
-            "engines": ["1.5L Normal"],
-            "base_price": 1400000,
-            "body": "SUV",
-            "hp": 102,
-        },
-    },
-    "Volkswagen": {
-        "Golf": {
-            "engines": ["1.4L Turbo"],
-            "base_price": 1600000,
-            "body": "Hatchback",
-            "hp": 150,
-        },
-        "Passat": {
-            "engines": ["1.4L Turbo", "2.0L Turbo"],
-            "base_price": 1900000,
-            "body": "Sedan",
-            "hp": 150,
-        },
-        "Tiguan": {
-            "engines": ["1.4L Turbo", "2.0L Turbo"],
-            "base_price": 2200000,
-            "body": "SUV",
-            "hp": 150,
-        },
-        "Touareg": {
-            "engines": ["3.0L V6 Turbo"],
-            "base_price": 4200000,
-            "body": "SUV",
-            "hp": 340,
-        },
-    },
-    "Mazda": {
-        "Mazda 3": {
-            "engines": ["1.5L Normal", "2.0L Normal"],
-            "base_price": 1350000,
-            "body": "Sedan",
-            "hp": 155,
-        },
-        "Mazda CX-3": {
-            "engines": ["1.5L Normal"],
-            "base_price": 1400000,
-            "body": "SUV",
-            "hp": 110,
-        },
-        "Mazda CX-5": {
-            "engines": ["2.5L Normal"],
-            "base_price": 1900000,
-            "body": "SUV",
-            "hp": 188,
-        },
-    },
-    "Ford": {
-        "Focus": {
-            "engines": ["1.5L Turbo", "1.5L Normal"],
-            "base_price": 1200000,
-            "body": "Sedan",
-            "hp": 182,
-        },
-        "Kuga": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1750000,
-            "body": "SUV",
-            "hp": 182,
-        },
-        "Explorer": {
-            "engines": ["2.3L Turbo", "3.0L V6"],
-            "base_price": 4500000,
-            "body": "SUV",
-            "hp": 300,
-        },
+        "Cerato / K3": 1350000,
+        "Sportage": 1950000,
+        "Pegas": 850000,
+        "Seltos": 1500000,
+        "XCeed": 1600000,
     },
     "Mitsubishi": {
-        "Lancer (Puma)": {
-            "engines": ["1.6L Normal"],
-            "base_price": 750000,
-            "body": "Sedan",
-            "hp": 117,
-        },
-        "Eclipse Cross": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1650000,
-            "body": "SUV",
-            "hp": 150,
-        },
-        "Xpander": {
-            "engines": ["1.5L Normal"],
-            "base_price": 1150000,
-            "body": "Van",
-            "hp": 104,
-        },
-        "Outlander": {
-            "engines": ["2.4L Normal"],
-            "base_price": 2000000,
-            "body": "SUV",
-            "hp": 167,
-        },
+        "Lancer": 750000,
+        "Xpander": 1300000,
+        "Eclipse Cross": 1600000,
+        "Attrage": 750000,
     },
-    "Jeep": {
-        "Renegade": {
-            "engines": ["1.4L Turbo", "1.3L Turbo"],
-            "base_price": 1550000,
-            "body": "SUV",
-            "hp": 140,
-        },
-        "Grand Cherokee": {
-            "engines": ["5.7L V8", "3.6L V6"],
-            "base_price": 4800000,
-            "body": "SUV",
-            "hp": 290,
-        },
-        "Wrangler": {
-            "engines": ["2.0L Turbo", "3.6L V6"],
-            "base_price": 4300000,
-            "body": "SUV",
-            "hp": 270,
-        },
+    "Suzuki": {
+        "Swift": 750000,
+        "Ciaz": 850000,
+        "Ertiga": 950000,
+        "Espresso": 550000,
     },
-    "Porsche": {
-        "Cayenne": {
-            "engines": ["3.0L V6 Turbo", "4.0L V8 Twin-Turbo"],
-            "base_price": 7500000,
-            "body": "SUV",
-            "hp": 348,
-        },
-        "Macan": {
-            "engines": ["2.0L Turbo", "2.9L V6"],
-            "base_price": 5500000,
-            "body": "SUV",
-            "hp": 265,
-        },
-        "Panamera": {
-            "engines": ["2.9L V6 Twin-Turbo"],
-            "base_price": 8800000,
-            "body": "Sedan",
-            "hp": 348,
-        },
-        "911 Carrera": {
-            "engines": ["3.0L Twin-Turbo H6"],
-            "base_price": 11000000,
-            "body": "Coupe",
-            "hp": 379,
-        },
+    "Honda": {"Civic": 1700000, "City": 1200000, "CR-V": 2200000},
+    "Renault": {
+        "Logan": 650000,
+        "Megane": 1400000,
+        "Duster": 1200000,
+        "Stepway": 850000,
     },
-    "Land Rover": {
-        "Range Rover Evoque": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 4100000,
-            "body": "SUV",
-            "hp": 200,
-        },
-        "Range Rover Sport": {
-            "engines": ["3.0L Turbo", "4.4L V8"],
-            "base_price": 8200000,
-            "body": "SUV",
-            "hp": 360,
-        },
-        "Defender": {
-            "engines": ["2.0L Turbo", "3.0L Turbo", "5.0L V8"],
-            "base_price": 7200000,
-            "body": "SUV",
-            "hp": 296,
-        },
+    "Peugeot": {
+        "301": 850000,
+        "508": 1800000,
+        "2008": 1450000,
+        "3008": 1950000,
+        "5008": 2200000,
     },
-    "Alfa Romeo": {
-        "Giulia": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 2700000,
-            "body": "Sedan",
-            "hp": 280,
-        },
-        "Stelvio": {
-            "engines": ["2.0L Turbo"],
-            "base_price": 3100000,
-            "body": "SUV",
-            "hp": 280,
-        },
+    "Fiat": {"Tipo": 1050000, "500": 1100000, "Punto": 500000},
+    "Skoda": {
+        "Octavia": 1850000,
+        "Kodiaq": 2600000,
+        "Karoq": 2100000,
+        "Scala": 1300000,
     },
-    "Subaru": {
-        "Impreza": {
-            "engines": ["2.0L Boxer"],
-            "base_price": 1350000,
-            "body": "Hatchback",
-            "hp": 152,
-        },
-        "XV / Crosstrek": {
-            "engines": ["2.0L Boxer"],
-            "base_price": 1500000,
-            "body": "SUV",
-            "hp": 152,
-        },
-        "Forester": {
-            "engines": ["2.5L Boxer"],
-            "base_price": 1900000,
-            "body": "SUV",
-            "hp": 182,
-        },
-    },
-    "Lexus": {
-        "ES 300h": {
-            "engines": ["2.5L Hybrid"],
-            "base_price": 4200000,
-            "body": "Sedan",
-            "hp": 215,
-        },
-        "RX 350": {
-            "engines": ["2.4L Turbo"],
-            "base_price": 5800000,
-            "body": "SUV",
-            "hp": 275,
-        },
-        "LX 600": {
-            "engines": ["3.5L Twin-Turbo V6"],
-            "base_price": 9800000,
-            "body": "SUV",
-            "hp": 409,
-        },
-    },
-    "Haval": {
-        "Jolion": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1100000,
-            "body": "SUV",
-            "hp": 147,
-        },
-        "H6": {
-            "engines": ["1.5L Turbo", "2.0L Turbo"],
-            "base_price": 1350000,
-            "body": "SUV",
-            "hp": 201,
-        },
-    },
-    "Jetour": {
-        "X70": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1050000,
-            "body": "SUV",
-            "hp": 147,
-        },
-        "X70 Plus": {
-            "engines": ["1.5L Turbo", "1.6L Turbo"],
-            "base_price": 1250000,
-            "body": "SUV",
-            "hp": 194,
-        },
-        "Dashing": {
-            "engines": ["1.5L Turbo", "1.6L Turbo"],
-            "base_price": 1350000,
-            "body": "SUV",
-            "hp": 156,
-        },
-    },
-    "BAIC": {
-        "X7": {
-            "engines": ["1.5L Turbo"],
-            "base_price": 1450000,
-            "body": "SUV",
-            "hp": 185,
-        },
-        "U5 Plus": {
-            "engines": ["1.5L Normal"],
-            "base_price": 750000,
-            "body": "Sedan",
-            "hp": 111,
-        },
+    "Volkswagen": {
+        "Golf": 1700000,
+        "Passat": 1900000,
+        "Tiguan": 2500000,
+        "Jetta": 900000,
     },
     "Opel": {
-        "Corsa": {
-            "engines": ["1.2L Turbo"],
-            "base_price": 1100000,
-            "body": "Hatchback",
-            "hp": 130,
-        },
-        "Crossland": {
-            "engines": ["1.2L Turbo"],
-            "base_price": 1300000,
-            "body": "SUV",
-            "hp": 110,
-        },
-        "Mokka": {
-            "engines": ["1.2L Turbo"],
-            "base_price": 1450000,
-            "body": "SUV",
-            "hp": 130,
-        },
-        "Grandland": {
-            "engines": ["1.6L Turbo"],
-            "base_price": 1750000,
-            "body": "SUV",
-            "hp": 180,
-        },
+        "Astra": 950000,
+        "Corsa": 1250000,
+        "Grandland": 1750000,
+        "Mokka": 1500000,
     },
+    "Seat": {
+        "Ibiza": 1250000,
+        "Leon": 1600000,
+        "Ateca": 1850000,
+        "Arona": 1350000,
+    },
+    "MG": {
+        "MG 5": 850000,
+        "MG 6": 1200000,
+        "MG ZS": 1050000,
+        "MG RX5": 1400000,
+        "MG4": 1350000,
+    },
+    "Chery": {
+        "Arrizo 5": 750000,
+        "Tiggo 3": 880000,
+        "Tiggo 7": 1100000,
+        "Tiggo 8": 1450000,
+    },
+    "Geely": {"Emgrand": 850000, "Coolray": 1300000, "Okavango": 1650000},
+    "Changan": {"Alsvin": 650000, "CS35 Plus": 1150000, "CS55 Plus": 1350000},
+    "BYD": {"F3": 620000, "Song Plus": 1600000},
+    "HAVAL": {"H6": 1450000, "Jolion": 1200000},
+    "Ford": {"Focus": 1200000, "EcoSport": 1000000, "Kuga": 1400000},
+    "BMW": {
+        "3 Series (320i)": 3500000,
+        "5 Series (520i)": 4800000,
+        "X1": 2900000,
+        "X5": 6200000,
+    },
+    "Mercedes": {
+        "C-Class (C180/C200)": 4200000,
+        "E-Class (E200)": 5800000,
+        "A-Class": 2700000,
+        "GLC": 5900000,
+    },
+    "Audi": {"A4": 2800000, "A6": 3900000, "Q3": 2500000, "Q7": 4900000},
 }
 
-# Session State Initialization
-if "history" not in st.session_state:
-    st.session_state.history = []
+CAR_IMAGES = {
+    "BMW": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80",
+    "Mercedes": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80",
+    "Toyota": "https://images.unsplash.com/photo-1629897048514-3dd7414fe72a?auto=format&fit=crop&w=800&q=80",
+    "Hyundai": "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=800&q=80",
+    "Kia": "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80",
+    "Nissan": "https://images.unsplash.com/photo-1609521263047-f8d205293f24?auto=format&fit=crop&w=800&q=80",
+    "Chevrolet": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80",
+}
 
-# Sidebar Navigation
-st.sidebar.title("🛠️ Control Panel")
-app_mode = st.sidebar.selectbox(
-    "Choose Section:",
-    [
-        "Price Predictor",
-        "Car Comparison",
-        "Budget Finder",
-        "Search History",
-    ],
-)
+def calculate_car_price(brand, model_name, year, km_driven, car_condition, transmission):
+    base_price = CAR_MODELS[brand][model_name]
+    years_old = 2026 - year
+    
+    age_dep = min(years_old * 0.035, 0.50)
+    km_dep = min((km_driven / 20000) * 0.01, 0.15)
+    trans_dep = 0.05 if transmission == "Manual" else 0.0
+    
+    total_dep = age_dep + km_dep + trans_dep
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("👩‍💻 **Developers:**Habiba Essam & Salma Ahmed")
+    if car_condition == "Zero (Brand New)":
+        est_price = base_price
+        age_dep, km_dep, trans_dep = 0.0, 0.0, 0.0
+    elif car_condition == "Nearly New (كسر زيرو)" and years_old <= 3 and km_driven <= 30000:
+        est_price = base_price * 0.92
+    else:
+        est_price = base_price * (1.0 - total_dep)
+        est_price = max(est_price, base_price * 0.45)
 
-# ================= 1. Price Predictor Section =================
-if app_mode == "Price Predictor":
-    st.title("🚗 Advanced Car Price Prediction System")
-    st.markdown(
-        "Select the brand, model, engine option, and extras to estimate the market price."
-    )
-    st.markdown("---")
+    min_p = est_price * 0.95
+    max_p = est_price * 1.05
 
-    col_input, col_info_box = st.columns([1.3, 1])
+    return est_price, min_p, max_p, base_price, age_dep, km_dep, trans_dep
+
+st.title("🚗 Smart Car Price Valuation System")
+st.caption("👩‍💻 **Developed by:** Salma Ahmed & Habiba Essam")
+st.markdown("---")
+
+tab1, tab2 = st.tabs(["🔮 Predict Single Car Price", "⚖️ Compare Two Cars"])
+
+with tab1:
+    col_input, col_img = st.columns([1.2, 1])
 
     with col_input:
         brand = st.selectbox("Car Brand", sorted(list(CAR_MODELS.keys())))
         available_models = list(CAR_MODELS[brand].keys())
-        model_name = st.selectbox("Car Model", available_models)
+        model_name = st.selectbox("Car Model / Line", available_models)
+        transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
 
-        car_data = CAR_MODELS[brand][model_name]
+    with col_img:
+        img_url = CAR_IMAGES.get(brand, "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80")
+        st.image(img_url, caption=f"{brand} Preview", use_container_width=True)
 
-        # Engine selection
-        selected_engine = st.selectbox(
-            "Engine Capacity & Type", car_data["engines"]
-        )
+    car_condition = st.radio(
+        "Car Condition",
+        ["Zero (Brand New)", "Nearly New (كسر زيرو)", "Used (مستعمل)"],
+        horizontal=True,
+    )
 
-        transmission = st.selectbox(
-            "Transmission", ["Automatic", "Manual"]
-        )
+    col1, col2 = st.columns(2)
+    with col1:
+        year = st.number_input("Manufacturing Year", min_value=2000, max_value=2026, value=2016)
+        fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "Hybrid", "Electric"])
 
-        year = st.slider("Manufacturing Year", 2010, 2026, 2022)
-
-        car_condition = st.radio(
-            "Car Condition",
-            ["Brand New (Zero)", "Nearly New", "Used in Good Condition"],
-            horizontal=True,
-        )
-
-        if car_condition == "Brand New (Zero)":
+    with col2:
+        if car_condition == "Zero (Brand New)":
             km_driven = 0
-            st.info("Car is brand new (0 KM)")
+            st.info("Kilometers Driven: 0 KM (Brand New)")
         else:
-            km_driven = st.number_input(
-                "Kilometers Driven (KM)",
-                min_value=0,
-                max_value=400000,
-                value=50000,
-                step=5000,
-            )
+            km_driven = st.number_input("Kilometers Driven (KM)", min_value=0, max_value=500000, value=80000)
 
-    with col_info_box:
-        st.subheader("✨ Car Extras & Options")
-        st.markdown("Check available features in the car:")
-
-        has_sunroof = st.checkbox("☀️ Sunroof / Panoramic Glass (+2.5%)")
-        has_leather = st.checkbox("💺 Leather Seats (+1.5%)")
-        has_start_engine = st.checkbox(
-            "🔑 Push Start Button & Smart Key (+1.5%)"
+    if st.button("Predict Price & Analyze All", key="btn_single"):
+        est_p, min_p, max_p, base_p, age_dep, km_dep, trans_dep = calculate_car_price(
+            brand, model_name, year, km_driven, car_condition, transmission
         )
-        has_sensors_cam = st.checkbox(
-            "📷 Rear Camera & Parking Sensors (+1.5%)"
-        )
-        has_alloy_wheels = st.checkbox("🛞 Original Alloy Wheels (+1%)")
-        has_screens = st.checkbox("📱 Smart Media Display (+1%)")
-
-        st.markdown("---")
-        st.info(
-            f"ℹ️ **Base Specs:**\n- Body Type: `{car_data['body']}`\n- Horsepower: `{car_data['hp']} HP`\n- Selected Engine: `{selected_engine}`"
-        )
-
-    st.markdown("---")
-
-    if st.button("🚀 Calculate Estimated Price"):
-        base_price = car_data["base_price"]
-
-        # Adjust price based on engine type
-        if "Turbo" in selected_engine or "Hybrid" in selected_engine:
-            base_price *= 1.08
-        if "V6" in selected_engine or "V8" in selected_engine or "Electric" in selected_engine:
-            base_price *= 1.15
-
-        years_old = 2026 - year
-        age_dep = min(years_old * 0.03, 0.45)
-        km_dep = min((km_driven / 15000) * 0.012, 0.20)
-        trans_dep = 0.05 if transmission == "Manual" else 0.0
-
-        total_depreciation = 1.0 - (age_dep + km_dep + trans_dep)
-
-        if car_condition == "Brand New (Zero)":
-            estimated_price = base_price
-        elif car_condition == "Nearly New":
-            estimated_price = base_price * 0.96
-        else:
-            estimated_price = base_price * max(total_depreciation, 0.35)
-
-        # Extras multiplier
-        extras_multiplier = 1.0
-        if has_sunroof:
-            extras_multiplier += 0.025
-        if has_leather:
-            extras_multiplier += 0.015
-        if has_start_engine:
-            extras_multiplier += 0.015
-        if has_sensors_cam:
-            extras_multiplier += 0.015
-        if has_alloy_wheels:
-            extras_multiplier += 0.010
-        if has_screens:
-            extras_multiplier += 0.010
-
-        estimated_price *= extras_multiplier
-
-        min_price = estimated_price * 0.95
-        max_price = estimated_price * 1.05
 
         st.success(
-            f"🎯 **Estimated Price for ({brand} - {model_name}):**\n"
-            f"### `{estimated_price:,.2f}` EGP\n\n"
-            f"📊 **Expected Market Range:** `{min_price:,.2f}` EGP to `{max_price:,.2f}` EGP"
+            f"🎯 **Estimated Price ({brand} {model_name} {year}):** {est_p:,.2f} EGP  |  "
+            f"📊 **Range:** {min_p:,.2f} — {max_p:,.2f} EGP"
         )
 
-        search_record = {
-            "Brand": brand,
-            "Model": model_name,
-            "Engine": selected_engine,
-            "Year": year,
-            "Estimated Price": f"{estimated_price:,.2f} EGP",
-            "Condition": car_condition,
-        }
-        if search_record not in st.session_state.history:
-            st.session_state.history.append(search_record)
+        st.markdown("---")
+        # جعل كل التحليلات تظهر بجانب بعضها في 3 أعمدة
+        c_a, c_b, c_c = st.columns(3)
 
-        chart_data = pd.DataFrame(
-            {
-                "Category": ["Minimum Price", "Estimated Price", "Maximum Price"],
-                "Price (EGP)": [min_price, estimated_price, max_price],
-            }
-        )
-        st.subheader("📊 Price Range Analysis")
-        st.bar_chart(chart_data.set_index("Category"))
+        with c_a:
+            st.markdown("##### 🔍 Price Breakdown")
+            st.write(f"• **Base Price:** {base_p:,.2f}")
+            st.write(f"• **Age Disc:** -{age_dep * 100:.1f}%")
+            st.write(f"• **KM Disc:** -{km_dep * 100:.1f}%")
+            if transmission == "Manual":
+                st.write("• **Manual Disc:** -5.0%")
+
+        with c_b:
+            st.markdown("##### ⛽ Operational Specs")
+            fuel_rate = "7.5 L / 100km" if fuel_type == "Petrol" else "5.0 L / 100km"
+            if fuel_type == "Electric": fuel_rate = "15 kWh / 100km"
+            st.write(f"• **Fuel Type:** {fuel_type}")
+            st.write(f"• **Est. Consumption:** {fuel_rate}")
+            st.write(f"• **Market Status:** High Demand 🔥")
+
+        with c_c:
+            st.markdown("##### 💳 Loan Calculator")
+            down_payment = est_p * 0.30
+            loan_amount = est_p - 0.30
+            monthly_installment = (est_p * 0.70 * 1.15) / 36  # تقسيط على 3 سنين بفوائد تقديرية
+            st.write(f"• **Down Payment (30%):** {down_payment:,.0f}")
+            st.write(f"• **Est. Monthly (3 Years):** {monthly_installment:,.0f} EGP/mo")
 
         st.markdown("---")
-        st.subheader("💳 Suggested Installment Calculator")
-        cp1, cp2 = st.columns(2)
-        with cp1:
-            down_payment_pct = st.slider("Down Payment (%)", 20, 70, 30)
-            down_payment = estimated_price * (down_payment_pct / 100)
-            loan_amt = estimated_price - down_payment
-            st.write(f"Down Payment Amount: **{down_payment:,.2f} EGP**")
-            st.write(f"Loan Amount: **{loan_amt:,.2f} EGP**")
-        with cp2:
-            duration = st.selectbox("Loan Duration (Years)", [1, 2, 3, 4, 5, 7])
-            interest_rate = 0.16
-            total_with_interest = loan_amt * (1 + (interest_rate * duration))
-            monthly = total_with_interest / (duration * 12)
-            st.write(f"Approx. Monthly Installment: **{monthly:,.2f} EGP / month**")
-
-        st.markdown("---")
-        csv_bytes = pd.DataFrame([search_record]).to_csv(index=False).encode("utf-8")
+        
+        # زر تحميل التقرير
+        report_df = pd.DataFrame([{
+            "Brand": brand, "Model": model_name, "Year": year, 
+            "Condition": car_condition, "KM": km_driven, "Fuel": fuel_type,
+            "Estimated Price (EGP)": est_p, "Min Price": min_p, "Max Price": max_p
+        }])
+        csv = report_df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="📥 Download Car Report (CSV)",
-            data=csv_bytes,
-            file_name="car_price_report.csv",
+            label="📥 Download Full Valuation & Analysis Report (CSV)",
+            data=csv,
+            file_name=f"{brand}_{model_name}_complete_report.csv",
             mime="text/csv",
         )
 
+with tab2:
+    st.subheader("⚖️ Side-by-Side Car Valuation Comparison")
+    col_car1, col_car2 = st.columns(2)
 
-# ================= 2. Car Comparison Section =================
-elif app_mode == "Car Comparison":
-    st.title("⚖️ Side-by-Side Car Comparison")
-    st.markdown("Compare specifications and base prices of two different cars.")
-
-    mc1, mc2 = st.columns(2)
-
-    with mc1:
-        st.subheader("First Car")
+    with col_car1:
+        st.markdown("### 🚗 Car 1")
         b1 = st.selectbox("Brand 1", sorted(list(CAR_MODELS.keys())), key="b1")
         m1 = st.selectbox("Model 1", list(CAR_MODELS[b1].keys()), key="m1")
-        info1 = CAR_MODELS[b1][m1]
-        st.write(f"- Base Price: **{info1['base_price']:,.2f} EGP**")
-        st.write(f"- Body Type: **{info1['body']}**")
-        st.write(f"- Horsepower: **{info1['hp']} HP**")
-        st.write(f"- Available Engines: {', '.join(info1['engines'])}")
+        y1 = st.number_input("Year 1", 2000, 2026, 2020, key="y1")
+        km1 = st.number_input("KM 1", 0, 500000, 60000, key="km1")
+        cond1 = st.radio("Condition 1", ["Used (مستعمل)", "Zero (Brand New)", "Nearly New (كسر زيرو)"], key="cond1")
+        trans1 = st.selectbox("Transmission 1", ["Automatic", "Manual"], key="t1")
 
-    with mc2:
-        st.subheader("Second Car")
+    with col_car2:
+        st.markdown("### 🚗 Car 2")
         b2 = st.selectbox("Brand 2", sorted(list(CAR_MODELS.keys())), key="b2")
         m2 = st.selectbox("Model 2", list(CAR_MODELS[b2].keys()), key="m2")
-        info2 = CAR_MODELS[b2][m2]
-        st.write(f"- Base Price: **{info2['base_price']:,.2f} EGP**")
-        st.write(f"- Body Type: **{info2['body']}**")
-        st.write(f"- Horsepower: **{info2['hp']} HP**")
-        st.write(f"- Available Engines: {', '.join(info2['engines'])}")
+        y2 = st.number_input("Year 2", 2000, 2026, 2018, key="y2")
+        km2 = st.number_input("KM 2", 0, 500000, 100000, key="km2")
+        cond2 = st.radio("Condition 2", ["Used (مستعمل)", "Zero (Brand New)", "Nearly New (كسر زيرو)"], key="cond2")
+        trans2 = st.selectbox("Transmission 2", ["Automatic", "Manual"], key="t2")
 
+    if st.button("Compare Prices", key="btn_compare"):
+        p1, _, _, _, _, _, _ = calculate_car_price(b1, m1, y1, km1, cond1, trans1)
+        p2, _, _, _, _, _, _ = calculate_car_price(b2, m2, y2, km2, cond2, trans2)
 
-# ================= 3. Budget Finder Section =================
-elif app_mode == "Budget Finder":
-    st.title("💰 Budget Finder")
-    st.markdown("Set your maximum budget to find matching cars.")
+        st.markdown("---")
+        res1, res2 = st.columns(2)
+        res1.metric(f"{b1} {m1} ({y1})", f"{p1:,.0f} EGP")
+        res2.metric(f"{b2} {m2} ({y2})", f"{p2:,.0f} EGP")
 
-    user_budget = st.slider(
-        "Maximum Budget (EGP):", 600000, 15000000, 1500000, step=50000
-    )
-
-    matched = []
-    for br, mods in CAR_MODELS.items():
-        for md, dt in mods.items():
-            if dt["base_price"] <= user_budget:
-                matched.append(
-                    {
-                        "Brand": br,
-                        "Model": md,
-                        "Base Price": f"{dt['base_price']:,.2f} EGP",
-                        "Body Type": dt["body"],
-                        "Horsepower": f"{dt['hp']} HP",
-                    }
-                )
-
-    if matched:
-        st.success(f"Found {len(matched)} cars matching your budget:")
-        st.dataframe(pd.DataFrame(matched), use_container_width=True)
-    else:
-        st.warning("No cars available under this budget.")
-
-
-# ================= 4. Search History Section =================
-elif app_mode == "Search History":
-    st.title("📋 Search History")
-    if st.session_state.history:
-        st.dataframe(pd.DataFrame(st.session_state.history), use_container_width=True)
-        if st.button("🗑️ Clear History"):
-            st.session_state.history = []
-            st.rerun()
-    else:
-        st.info("No search history recorded yet.")
+        diff = abs(p1 - p2)
+        cheaper = f"{b1} {m1}" if p1 < p2 else f"{b2} {m2}"
+        st.info(f"💡 **Comparison Summary:** {cheaper} is cheaper by approximately **{diff:,.0f} EGP**.")
