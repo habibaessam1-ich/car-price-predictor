@@ -11,568 +11,660 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# قاعدة البيانات الشاملة للسيارات والمواصفات
+# قاعدة بيانات شاملة لكل الماركات والموديلات وسعات المحركات في السوق المصري
 CAR_MODELS = {
-    "Nissan": {
-        "Sunny": {
-            "price": 800000,
-            "engine": "1.5L",
-            "body": "Sedan",
-            "hp": 108,
-            "fuel_consumption": 6.9,
-        },
-        "Sentra": {
-            "price": 1100000,
-            "engine": "1.6L",
-            "body": "Sedan",
-            "hp": 118,
-            "fuel_consumption": 7.1,
-        },
-        "Qashqai": {
-            "price": 1650000,
-            "engine": "1.3L Turbo",
-            "body": "SUV",
-            "hp": 148,
-            "fuel_consumption": 6.5,
-        },
-        "Juke": {
-            "price": 1300000,
-            "engine": "1.0L Turbo",
-            "body": "SUV",
-            "hp": 114,
-            "fuel_consumption": 5.8,
-        },
-    },
-    "Toyota": {
-        "Corolla": {
-            "price": 1600000,
-            "engine": "1.6L",
+    "تويوتا (Toyota)": {
+        "كورولا (Corolla)": {
+            "engines": ["1.6L Normal", "1.8L Hybrid"],
+            "base_price": 1600000,
             "body": "Sedan",
             "hp": 120,
-            "fuel_consumption": 6.8,
         },
-        "Yaris": {
-            "price": 1000000,
-            "engine": "1.5L",
+        "ياريس (Yaris)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 1000000,
             "body": "Hatchback",
             "hp": 118,
-            "fuel_consumption": 4.9,
         },
-        "Fortuner": {
-            "price": 3800000,
-            "engine": "4.0L",
+        "فورتشنر (Fortuner)": {
+            "engines": ["2.7L Normal", "4.0L V6"],
+            "base_price": 3800000,
             "body": "SUV",
             "hp": 234,
-            "fuel_consumption": 11.5,
         },
-        "C-HR": {
-            "price": 1750000,
-            "engine": "1.2L Turbo",
+        "رانر / C-HR": {
+            "engines": ["1.2L Turbo", "1.8L Hybrid"],
+            "base_price": 1750000,
             "body": "SUV",
             "hp": 113,
-            "fuel_consumption": 6.0,
+        },
+        "بلتا (Belta)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 850000,
+            "body": "Sedan",
+            "hp": 103,
         },
     },
-    "Hyundai": {
-        "Elantra": {
-            "price": 1300000,
-            "engine": "1.6L",
+    "نيسان (Nissan)": {
+        "صني (Sunny)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 800000,
+            "body": "Sedan",
+            "hp": 108,
+        },
+        "سنترا (Sentra)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 1100000,
+            "body": "Sedan",
+            "hp": 118,
+        },
+        "قشقاي (Qashqai)": {
+            "engines": ["1.3L Turbo"],
+            "base_price": 1650000,
+            "body": "SUV",
+            "hp": 148,
+        },
+        "جوك (Juke)": {
+            "engines": ["1.0L Turbo"],
+            "base_price": 1300000,
+            "body": "SUV",
+            "hp": 114,
+        },
+    },
+    "هيونداي (Hyundai)": {
+        "النترا (Elantra CN7 / AD)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 1300000,
             "body": "Sedan",
             "hp": 127,
-            "fuel_consumption": 7.0,
         },
-        "Tucson": {
-            "price": 1900000,
-            "engine": "1.6L Turbo",
+        "توسان (Tucson)": {
+            "engines": ["1.6L Turbo"],
+            "base_price": 1900000,
             "body": "SUV",
             "hp": 180,
-            "fuel_consumption": 7.5,
         },
-        "Accent": {
-            "price": 900000,
-            "engine": "1.4L",
+        "أكسنت (Accent RB)": {
+            "engines": ["1.4L Normal"],
+            "base_price": 900000,
             "body": "Sedan",
             "hp": 100,
-            "fuel_consumption": 6.4,
         },
-        "Creta": {
-            "price": 1400000,
-            "engine": "1.5L",
+        "كريتا (Creta)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 1400000,
             "body": "SUV",
             "hp": 113,
-            "fuel_consumption": 6.7,
+        },
+        "آي 10 (i10)": {
+            "engines": ["1.2L Normal"],
+            "base_price": 700000,
+            "body": "Hatchback",
+            "hp": 84,
         },
     },
-    "Kia": {
-        "Cerato / K3": {
-            "price": 1350000,
-            "engine": "1.6L",
+    "كيا (Kia)": {
+        "سيراتو / كيه 3 (Cerato / K3)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 1350000,
             "body": "Sedan",
             "hp": 130,
-            "fuel_consumption": 6.9,
         },
-        "Sportage": {
-            "price": 1950000,
-            "engine": "1.6L Turbo",
+        "سبورتاج (Sportage)": {
+            "engines": ["1.6L Turbo"],
+            "base_price": 1950000,
             "body": "SUV",
             "hp": 177,
-            "fuel_consumption": 7.6,
         },
-        "Pegas": {
-            "price": 850000,
-            "engine": "1.4L",
+        "بيجاس (Pegas)": {
+            "engines": ["1.4L Normal"],
+            "base_price": 850000,
             "body": "Sedan",
             "hp": 95,
-            "fuel_consumption": 6.1,
         },
-        "Seltos": {
-            "price": 1500000,
-            "engine": "1.4L Turbo",
+        "سيلتوس (Seltos)": {
+            "engines": ["1.4L Turbo", "1.5L Normal"],
+            "base_price": 1500000,
             "body": "SUV",
             "hp": 140,
-            "fuel_consumption": 6.3,
         },
     },
-    "BMW": {
-        "3 Series (320i)": {
-            "price": 3500000,
-            "engine": "2.0L Turbo",
+    "إم جي (MG)": {
+        "إم جي 5 (MG 5)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 850000,
             "body": "Sedan",
-            "hp": 184,
-            "fuel_consumption": 6.3,
+            "hp": 118,
         },
-        "5 Series (520i)": {
-            "price": 4800000,
-            "engine": "2.0L Turbo",
+        "إم جي 6 (MG 6)": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1200000,
             "body": "Sedan",
-            "hp": 184,
-            "fuel_consumption": 6.7,
+            "hp": 169,
         },
-        "X1": {
-            "price": 2900000,
-            "engine": "1.5L Turbo",
+        "إم جي زد إس (MG ZS)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 1050000,
             "body": "SUV",
-            "hp": 140,
-            "fuel_consumption": 6.5,
+            "hp": 119,
         },
-        "X5": {
-            "price": 6200000,
-            "engine": "3.0L Turbo",
+        "إم جي آر إكس 5 (MG RX5)": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1400000,
             "body": "SUV",
-            "hp": 340,
-            "fuel_consumption": 9.2,
+            "hp": 171,
         },
-    },
-    "Mercedes": {
-        "C-Class (C180)": {
-            "price": 4200000,
-            "engine": "1.5L Turbo",
-            "body": "Sedan",
+        "إم جي 4 (MG4 Electric)": {
+            "engines": ["Electric EV"],
+            "base_price": 1350000,
+            "body": "Hatchback",
             "hp": 170,
-            "fuel_consumption": 6.5,
-        },
-        "E-Class (E200)": {
-            "price": 5800000,
-            "engine": "2.0L Turbo",
-            "body": "Sedan",
-            "hp": 197,
-            "fuel_consumption": 7.0,
-        },
-        "GLC": {
-            "price": 5900000,
-            "engine": "2.0L Turbo",
-            "body": "SUV",
-            "hp": 204,
-            "fuel_consumption": 7.4,
         },
     },
-    "Audi": {
-        "A4": {
-            "price": 2800000,
-            "engine": "2.0L Turbo",
+    "شيري (Chery)": {
+        "أريزو 5 (Arrizo 5)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 750000,
             "body": "Sedan",
-            "hp": 190,
-            "fuel_consumption": 6.1,
+            "hp": 114,
         },
-        "Q3": {
-            "price": 2500000,
-            "engine": "1.4L Turbo",
+        "تيجو 3 (Tiggo 3)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 880000,
+            "body": "SUV",
+            "hp": 126,
+        },
+        "تيجو 7 (Tiggo 7)": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1100000,
+            "body": "SUV",
+            "hp": 145,
+        },
+        "تيجو 8 (Tiggo 8 / Pro)": {
+            "engines": ["1.5L Turbo", "1.6L Turbo"],
+            "base_price": 1450000,
+            "body": "SUV",
+            "hp": 145,
+        },
+    },
+    "بي واي دي (BYD)": {
+        "إف 3 (F3)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 620000,
+            "body": "Sedan",
+            "hp": 108,
+        },
+        "سونج بلس (Song Plus Hybrid)": {
+            "engines": ["1.5L Hybrid"],
+            "base_price": 1600000,
+            "body": "SUV",
+            "hp": 197,
+        },
+    },
+    "شانجان (Changan)": {
+        "ألسفين (Alsvin)": {
+            "engines": ["1.4L Normal", "1.5L Normal"],
+            "base_price": 650000,
+            "body": "Sedan",
+            "hp": 107,
+        },
+        "سي إس 35 بلس (CS35 Plus)": {
+            "engines": ["1.4L Turbo"],
+            "base_price": 1150000,
+            "body": "SUV",
+            "hp": 158,
+        },
+        "سي إس 55 بلس (CS55 Plus)": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1350000,
+            "body": "SUV",
+            "hp": 185,
+        },
+    },
+    "جيلي (Geely)": {
+        "إمجراند (Emgrand)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 850000,
+            "body": "Sedan",
+            "hp": 102,
+        },
+        "كولراي (Coolray)": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1300000,
+            "body": "SUV",
+            "hp": 175,
+        },
+        "أوكافانجو (Okavango)": {
+            "engines": ["1.5L Hybrid"],
+            "base_price": 1650000,
+            "body": "SUV",
+            "hp": 190,
+        },
+    },
+    "سكودا (Skoda)": {
+        "أوكتافيا (Octavia)": {
+            "engines": ["1.4L Turbo", "2.0L Turbo"],
+            "base_price": 1850000,
+            "body": "Sedan",
+            "hp": 150,
+        },
+        "كودياك (Kodiaq)": {
+            "engines": ["1.4L Turbo", "2.0L Turbo"],
+            "base_price": 2600000,
             "body": "SUV",
             "hp": 150,
-            "fuel_consumption": 6.8,
+        },
+        "كاروك (Karoq)": {
+            "engines": ["1.4L Turbo"],
+            "base_price": 2100000,
+            "body": "SUV",
+            "hp": 150,
+        },
+        "سكالا (Scala)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 1300000,
+            "body": "Hatchback",
+            "hp": 110,
         },
     },
-}
-
-CAR_IMAGES = {
-    "BMW": (
-        "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Mercedes": (
-        "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Toyota": (
-        "https://images.unsplash.com/photo-1629897048514-3dd7414fe72a?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Hyundai": (
-        "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Kia": (
-        "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Nissan": (
-        "https://images.unsplash.com/photo-1609521263047-f8d205293f24?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Audi": (
-        "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=800&q=80"
-    ),
+    "بي إم دبليو (BMW)": {
+        "الفئة الثالثة (320i)": {
+            "engines": ["2.0L Turbo"],
+            "base_price": 3500000,
+            "body": "Sedan",
+            "hp": 184,
+        },
+        "الفئة الخامسة (520i)": {
+            "engines": ["2.0L Turbo"],
+            "base_price": 4800000,
+            "body": "Sedan",
+            "hp": 184,
+        },
+        "إكس 1 (X1)": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 2900000,
+            "body": "SUV",
+            "hp": 140,
+        },
+        "إكس 5 (X5)": {
+            "engines": ["3.0L Turbo"],
+            "base_price": 6200000,
+            "body": "SUV",
+            "hp": 340,
+        },
+    },
+    "مرسيدس (Mercedes-Benz)": {
+        "سي كلاس (C180 / C200)": {
+            "engines": ["1.5L Turbo", "2.0L Turbo"],
+            "base_price": 4200000,
+            "body": "Sedan",
+            "hp": 170,
+        },
+        "إي كلاس (E200)": {
+            "engines": ["2.0L Turbo"],
+            "base_price": 5800000,
+            "body": "Sedan",
+            "hp": 197,
+        },
+        "جي إل سي (GLC)": {
+            "engines": ["2.0L Turbo"],
+            "base_price": 5900000,
+            "body": "SUV",
+            "hp": 204,
+        },
+        "إيه كلاس (A200)": {
+            "engines": ["1.3L Turbo"],
+            "base_price": 2700000,
+            "body": "Hatchback",
+            "hp": 136,
+        },
+    },
+    "أودي (Audi)": {
+        "أودي إيه 4 (A4)": {
+            "engines": ["2.0L Turbo"],
+            "base_price": 2800000,
+            "body": "Sedan",
+            "hp": 190,
+        },
+        "أودي إيه 6 (A6)": {
+            "engines": ["2.0L Turbo"],
+            "base_price": 3900000,
+            "body": "Sedan",
+            "hp": 245,
+        },
+        "أودي كيو 3 (Q3)": {
+            "engines": ["1.4L Turbo"],
+            "base_price": 2500000,
+            "body": "SUV",
+            "hp": 150,
+        },
+        "أودي كيو 7 (Q7)": {
+            "engines": ["3.0L Turbo"],
+            "base_price": 4900000,
+            "body": "SUV",
+            "hp": 340,
+        },
+    },
+    "شيفروليه (Chevrolet)": {
+        "أوبترا (Optra)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 750000,
+            "body": "Sedan",
+            "hp": 110,
+        },
+        "كابتيفا (Captiva)": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1500000,
+            "body": "SUV",
+            "hp": 148,
+        },
+        "أفيو (Aveo)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 600000,
+            "body": "Sedan",
+            "hp": 105,
+        },
+    },
+    "رينو (Renault)": {
+        "ميجان (Megane)": {
+            "engines": ["1.6L Normal", "1.3L Turbo"],
+            "base_price": 1400000,
+            "body": "Sedan",
+            "hp": 115,
+        },
+        "لوجان (Logan)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 650000,
+            "body": "Sedan",
+            "hp": 110,
+        },
+        "داستر (Duster)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 1200000,
+            "body": "SUV",
+            "hp": 115,
+        },
+        "ستيبواي (Sandero Stepway)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 850000,
+            "body": "Hatchback",
+            "hp": 110,
+        },
+    },
+    "فيات (Fiat)": {
+        "تيبو (Tipo)": {
+            "engines": ["1.4L Normal", "1.6L Normal"],
+            "base_price": 1050000,
+            "body": "Sedan",
+            "hp": 110,
+        },
+        "فيات 500 (500)": {
+            "engines": ["1.4L Normal"],
+            "base_price": 1100000,
+            "body": "Hatchback",
+            "hp": 100,
+        },
+    },
+    "بيجو (Peugeot)": {
+        "بيجو 301 (301)": {
+            "engines": ["1.6L Normal"],
+            "base_price": 850000,
+            "body": "Sedan",
+            "hp": 115,
+        },
+        "بيجو 508 (508)": {
+            "engines": ["1.6L Turbo"],
+            "base_price": 1800000,
+            "body": "Sedan",
+            "hp": 165,
+        },
+        "بيجو 2008 (2008)": {
+            "engines": ["1.2L Turbo"],
+            "base_price": 1450000,
+            "body": "SUV",
+            "hp": 130,
+        },
+        "بيجو 3008 (3008)": {
+            "engines": ["1.6L Turbo"],
+            "base_price": 1950000,
+            "body": "SUV",
+            "hp": 180,
+        },
+        "بيجو 5008 (5008)": {
+            "engines": ["1.6L Turbo"],
+            "base_price": 2200000,
+            "body": "SUV",
+            "hp": 180,
+        },
+    },
+    "سوزوكي (Suzuki)": {
+        "سويفت (Swift)": {
+            "engines": ["1.2L Normal"],
+            "base_price": 750000,
+            "body": "Hatchback",
+            "hp": 84,
+        },
+        "ديزاير / سياز (Ciaz / Dzire)": {
+            "engines": ["1.2L Normal", "1.5L Normal"],
+            "base_price": 850000,
+            "body": "Sedan",
+            "hp": 104,
+        },
+        "إرتيجا (Ertiga)": {
+            "engines": ["1.5L Normal"],
+            "base_price": 950000,
+            "body": "Van",
+            "hp": 103,
+        },
+    },
 }
 
 # تهيئة الـ Session State
 if "history" not in st.session_state:
     st.session_state.history = []
-if "favorites" not in st.session_state:
-    st.session_state.favorites = []
 
-# القائمة الجانبية المتقدمة
-st.sidebar.title("🛠️ لوحة التحكم الشاملة")
+# القائمة الجانبية
+st.sidebar.title("🛠️ لوحة التحكم العربية الشاملة")
 app_mode = st.sidebar.selectbox(
     "اختر القسم:",
     [
-        "توقع الأسعار الذكي",
-        "مقارنة السيارات المتقدمة",
-        "مكتشف الميزانية الشامل",
-        "إحصائيات وتحليلات السوق",
-        "سجل البحث والمفضلة",
+        "توقع أسعار السيارات بالتفصيل",
+        "مقارنة بين سيارتين",
+        "البحث بالميزانية المتاحة",
+        "سجل البحث السابق",
     ],
 )
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("👩‍💻 **المطورون:** Salma Ahmed & Habiba Essam")
 
-# ================= 1. قسم توقع الأسعار الذكي =================
-if app_mode == "توقع الأسعار الذكي":
-    st.title("🚗 نظام توقع أسعار السيارات المتقدم والذكي")
+# ================= 1. قسم توقع أسعار السيارات بالتفصيل =================
+if app_mode == "توقع أسعار السيارات بالتفصيل":
+    st.title("🚗 نظام توقع وتحديد أسعار السيارات في مصر")
+    st.markdown(
+        "اختر الماركة، الموديل، سعة المحرك، والإضافات الخاصة بالسيارة للحصول على سعر دقيق."
+    )
     st.markdown("---")
 
-    col_input, col_img = st.columns([1.2, 1])
+    col_input, col_info_box = st.columns([1.3, 1])
 
     with col_input:
-        brand = st.selectbox("ماركة السيارة (Brand)", sorted(list(CAR_MODELS.keys())))
+        # اختيار الماركة
+        brand = st.selectbox(
+            "اختر ماركة السيارة (Brand)", sorted(list(CAR_MODELS.keys()))
+        )
+
+        # اختيار الموديل بناء على الماركة
         available_models = list(CAR_MODELS[brand].keys())
-        model_name = st.selectbox("موديل السيارة (Model)", available_models)
+        model_name = st.selectbox("اختر موديل السيارة (Model)", available_models)
 
-        car_info = CAR_MODELS[brand][model_name]
-        st.info(
-            f"ℹ️ **المواصفات الأساسية:** المحرك: `{car_info['engine']}` | الهيكل: `{car_info['body']}` | القوة: `{car_info['hp']} HP` | استهلاك الوقود: `{car_info['fuel_consumption']}L/100km`"
+        car_data = CAR_MODELS[brand][model_name]
+
+        # اختيار سعة المحرك المتاحة لهذا الموديل
+        selected_engine = st.selectbox(
+            "اختر سعة وتكوين المحرك (Engine Capacity)", car_data["engines"]
         )
 
+        # ناقل الحركة
         transmission = st.selectbox(
-            "ناقل الحركة (Transmission)", ["Automatic", "Manual"]
-        )
-        car_color = st.selectbox(
-            "لون السيارة",
-            ["أبيض", "أسود", "فضي", "رمادي", "أحمر", "أزرق", "ألوان أخرى"],
+            "ناقل الحركة (Transmission)", ["أوتوماتيك (Automatic)", "مانيوال (Manual)"]
         )
 
-    with col_img:
-        img_url = CAR_IMAGES.get(
-            brand,
-            "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80",
-        )
-        st.image(
-            img_url,
-            caption=f"{brand} - {model_name} معاينة",
-            use_container_width=True,
-        )
+        # سنة الصنع
+        year = st.slider("سنة الصنع (Manufacturing Year)", 2010, 2026, 2022)
 
-    car_condition = st.radio(
-        "حالة السيارة",
-        ["زيرو (جديدة تماماً)", "حالة الزيرو (كسر زيرو)", "مستعملة"],
-        horizontal=True,
-    )
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        year = st.number_input(
-            "سنة الصنع", min_value=2005, max_value=2026, value=2022
-        )
-        fuel_type = st.selectbox(
-            "نوع الوقود", ["بنزين", "هجين (Hybrid)", "كهرباء", "ديزل"]
+        # حالة السيارة
+        car_condition = st.radio(
+            "حالة السيارة العامة",
+            ["زيرو (جديدة تماماً)", "كسر زيرو (بحالة الوكالة)", "مستعملة بحالة جيدة"],
+            horizontal=True,
         )
 
-    with col2:
+        # المسافة المقطوعة
         if car_condition == "زيرو (جديدة تماماً)":
             km_driven = 0
-            st.success("المسافة المقطوعة: 0 كم (زيرو)")
+            st.info("السيارة جديدة تماماً (0 كم)")
         else:
             km_driven = st.number_input(
-                "المسافة المقطوعة (كم)",
+                "عداد المسافات المقطوعة (بالكيلومتر)",
                 min_value=0,
-                max_value=500000,
-                value=40000,
+                max_value=400000,
+                value=50000,
                 step=5000,
             )
 
-    # تفاصيل إضافية متقدمة
-    with st.exparker("⚙️ خيارات متقدمة (حالة الدهان والصيانة)") if hasattr(st, 'exparker') else st.container():
-        st.write("تقييم هيكل السيارة:")
-        col_a, col_b, col_c = st.columns(3)
-        with col_a:
-            has_scratch = st.checkbox("خربوش بسيط / رش صاج خارجي")
-        with col_b:
-            has_accident = st.checkbox("حوادث سابقة (تأثير على الشاسيه)")
-        with col_c:
-            agency_maintenance = st.checkbox("صيانة دورية بالتوكيل")
+    with col_info_box:
+        st.subheader("✨ الإضافات والكماليات (Extras)")
+        st.markdown("حدد الميزات والكماليات المتوفرة في السيارة:")
+
+        has_sunroof = st.checkbox("☀️ فتحة سقف / سقف زجاجي بانوراما (+2.5%)")
+        has_leather = st.checkbox("💺 فرش جلد طبيعي للمقاعد (+1.5%)")
+        has_start_engine = st.checkbox("🔑 بصمة تشغيل ونظام دخول ذكي (+1.5%)")
+        has_sensors_cam = st.checkbox(
+            "📷 كاميرا خلفية وحساسات парковки (+1.5%)"
+        )
+        has_alloy_wheels = st.checkbox("🛞 جنوط رياضية أصلية (+1%)")
+        has_screens = st.checkbox("📱 شاشة وسائط ذكية وتحكم طارة (+1%)")
+
+        st.markdown("---")
+        st.info(
+            f"ℹ️ **المواصفات الأساسية:**\n- نمط الهيكل: `{car_data['body']}`\n- الققدرة الحصانية: `{car_data['hp']} حصان`\n- المحرك المختار: `{selected_engine}`"
+        )
 
     st.markdown("---")
 
-    if st.button("🚀 احسب السعر المتوقع الآن"):
-        base_price = car_info["price"]
+    if st.button("🚀 احسب السعر النهائي المتوقع"):
+        base_price = car_data["base_price"]
+
+        # تعديل السعر حسب نوع المحرك المختار
+        if "Turbo" in selected_engine or "Hybrid" in selected_engine:
+            base_price *= 1.08
+        if "V6" in selected_engine or "Electric" in selected_engine:
+            base_price *= 1.15
+
+        # حساب الاستهلاك والعمر
         years_old = 2026 - year
+        age_dep = min(years_old * 0.03, 0.45)
+        km_dep = min((km_driven / 15000) * 0.012, 0.20)
+        trans_dep = 0.05 if "مانيوال" in transmission else 0.0
 
-        # معادلة حساب الاستهلاك والخصم الذكية
-        age_depreciation = min(years_old * 0.03, 0.45)
-        km_depreciation = min((km_driven / 15000) * 0.012, 0.20)
-        trans_dep = 0.04 if transmission == "Manual" else 0.0
-        accident_dep = 0.15 if has_accident else (0.05 if has_scratch else 0.0)
-        agency_bonus = 0.05 if agency_maintenance else 0.0
-
-        total_factor = (
-            1.0
-            - age_depreciation
-            - km_depreciation
-            - trans_dep
-            - accident_dep
-            + agency_bonus
-        )
+        total_depreciation = 1.0 - (age_dep + km_dep + trans_dep)
 
         if car_condition == "زيرو (جديدة تماماً)":
             estimated_price = base_price
-        elif car_condition == "حالة الزيرو (كسر زيرو)":
-            estimated_price = base_price * 0.95
+        elif car_condition == "كسر زيرو (بحالة الوكالة)":
+            estimated_price = base_price * 0.96
         else:
-            estimated_price = base_price * max(total_factor, 0.35)
+            estimated_price = base_price * max(total_depreciation, 0.35)
 
-        min_price = estimated_price * 0.94
-        max_price = estimated_price * 1.06
+        # إضافة قيمة الإضافات والكماليات
+        extras_multiplier = 1.0
+        if has_sunroof:
+            extras_multiplier += 0.025
+        if has_leather:
+            extras_multiplier += 0.015
+        if has_start_engine:
+            extras_multiplier += 0.015
+        if has_sensors_cam:
+            extras_multiplier += 0.015
+        if has_alloy_wheels:
+            extras_multiplier += 0.010
+        if has_screens:
+            extras_multiplier += 0.010
 
+        estimated_price *= extras_multiplier
+
+        min_price = estimated_price * 0.95
+        max_price = estimated_price * 1.05
+
+        # عرض النتائج باللغة العربية
         st.success(
-            f"🎯 **السعر التقديري لـ ({brand} {model_name} - {year}):** `{estimated_price:,.2f}` جنيه مصري\n\n"
-            f"📊 **النطاق المتوقع للسوق (هامش خطأ ±6%):** `{min_price:,.2f}` ج.م — `{max_price:,.2f}` ج.م"
+            f"🎯 **السعر التقديري للسيارة ({brand} - {model_name}):**\n"
+            f"### `{estimated_price:,.2f}` جنيه مصري\n\n"
+            f"📊 **النطاق المتوقع في السوق المصري:** `{min_price:,.2f}` ج.م إلى `{max_price:,.2f}` ج.م"
         )
 
-        # حفظ في السجل
+        # حفظ البحث في السجل
         search_record = {
-            "Brand": brand,
-            "Model": model_name,
-            "Year": year,
-            "Estimated Price": f"{estimated_price:,.2f} EGP",
-            "Condition": car_condition,
+            "الماركة": brand,
+            "الموديل": model_name,
+            "المحرك": selected_engine,
+            "سنة الصنع": year,
+            "السعر المتوقع": f"{estimated_price:,.2f} ج.م",
+            "الحالة": car_condition,
         }
         if search_record not in st.session_state.history:
             st.session_state.history.append(search_record)
 
-        # رسم بياني للتحليل
-        chart_df = pd.DataFrame(
+        # رسم بياني توضيحي
+        chart_data = pd.DataFrame(
             {
                 "الفئة": ["الحد الأدنى", "السعر المتوقع", "الحد الأقصى"],
-                "السعر (جنيه)": [min_price, estimated_price, max_price],
+                "السعر بالجنيه": [min_price, estimated_price, max_price],
             }
         )
         st.subheader("📊 تحليل نطاق الأسعار")
-        st.bar_chart(chart_df.set_index("الفئة"))
+        st.bar_chart(chart_data.set_index("الفئة"))
 
-        # حاسبة التقسيط المتقدمة
+        # حاسبة التقسيط بالجنيه
         st.markdown("---")
-        st.subheader("💳 حاسبة الأقساط والتمويل الشاملة")
+        st.subheader("💳 حاسبة الأقساط البنكية المقترحة")
         cp1, cp2 = st.columns(2)
         with cp1:
-            down_payment_pct = st.slider("مقدم الحجز (%)", 20, 80, 30, key="dp1")
+            down_payment_pct = st.slider("نسبة المقدم (%)", 20, 70, 30)
             down_payment = estimated_price * (down_payment_pct / 100)
-            loan_amount = estimated_price - down_payment
-            st.write(f"مبلغ المقدم: **{down_payment:,.2f} ج.م**")
-            st.write(f"إجمالي قيمة القرض: **{loan_amount:,.2f} ج.م**")
+            loan_amt = estimated_price - down_payment
+            st.write(f"مقدم الحجز: **{down_payment:,.2f} ج.م**")
+            st.write(f"مبلغ التمويل / القرض: **{loan_amt:,.2f} ج.م**")
         with cp2:
-            loan_years = st.selectbox(
-                "فترة السداد (بالسنوات)", [1, 2, 3, 4, 5, 7], key="ly1"
-            )
-            annual_interest = 0.16  # نسبة فائدة سنوية افتراضية
-            total_interest = loan_amount * (1 + (annual_interest * loan_years))
-            monthly_installment = total_interest / (loan_years * 12)
-            st.write(
-                f"القسط الشهري التقريبي: **{monthly_installment:,.2f} ج.م / شهرياً**"
-            )
+            duration = st.selectbox("مدة التقسيط (بالسنوات)", [1, 2, 3, 4, 5, 7])
+            interest_rate = 0.16  # 16% فائدة سنوية تقريبية
+            total_with_interest = loan_amt * (1 + (interest_rate * duration))
+            monthly = total_with_interest / (duration * 12)
+            st.write(f"قيمة القسط الشهري التقريبي: **{monthly:,.2f} ج.م / شهرياً**")
 
-        # أزرار التنزيل والتصدير
+        # تصدير التقرير
         st.markdown("---")
-        col_d1, col_d2 = st.columns(2)
-        with col_d1:
-            csv_data = pd.DataFrame([search_record]).to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="📥 تنزيل تقرير السيارة (CSV)",
-                data=csv_data,
-                file_name=f"{brand}_{model_name}_report.csv",
-                mime="text/csv",
-            )
-        with col_d2:
-            json_data = json.dumps(search_record, ensure_ascii=False, indent=4)
-            st.download_button(
-                label="📥 تنزيل تقرير السيارة (JSON)",
-                data=json_data,
-                file_name=f"{brand}_{model_name}_report.json",
-                mime="application/json",
-            )
+        csv_bytes = pd.DataFrame([search_record]).to_csv(index=False).encode("utf-8-sig")
+        st.download_button(
+            label="📥 تحميل تقرير السيارة (CSV)",
+            data=csv_bytes,
+            file_name="car_price_report.csv",
+            mime="text/csv",
+        )
 
 
-# ================= 2. قسم مقارنة السيارات المتقدمة =================
-elif app_mode == "مقارنة السيارات المتقدمة":
-    st.title("⚖️ مقارنة شاملة جنباً إلى جنب بين سيارتين")
-    st.markdown(
-        "قارن بين مواصفات، أسعار، استهلاك الوقود، وقوة المحرك لسيارتين مختلفتين بدقة."
-    )
+# ================= 2. قسم مقارنة بين سيارتين =================
+elif app_mode == "مقارنة بين سيارتين":
+    st.title("⚖️ مقارنة شاملة بين سيارتين في السوق المصري")
+    st.markdown("قارن المواصفات والأسعار والقوة الحصانية جنباً إلى جنب.")
 
-    col_c1, col_c2 = st.columns(2)
+    mc1, mc2 = st.columns(2)
 
-    with col_c1:
+    with mc1:
         st.subheader("السيارة الأولى")
-        b1 = st.selectbox("الماركة 1", list(CAR_MODELS.keys()), key="comp_b1")
-        m1 = st.selectbox(
-            "الموديل 1", list(CAR_MODELS[b1].keys()), key="comp_m1"
-        )
+        b1 = st.selectbox("ماركة 1", sorted(list(CAR_MODELS.keys())), key="b1")
+        m1 = st.selectbox("موديل 1", list(CAR_MODELS[b1].keys()), key="m1")
         info1 = CAR_MODELS[b1][m1]
-        st.markdown(
-            f"""
-        - 💰 السعر الأساسي: **{info1['price']:,.2f} ج.م**
-        - 🏎️ المحرك: **{info1['engine']}**
-        - 🚗 نمط الهيكل: **{info1['body']}**
-        - ⚡ قوة الحصان: **{info1['hp']} HP**
-        - ⛽ استهلاك الوقود: **{info1['fuel_consumption']} L/100km**
-        """
-        )
-
-    with col_c2:
-        st.subheader("السيارة الثانية")
-        b2 = st.selectbox("الماركة 2", list(CAR_MODELS.keys()), key="comp_b2")
-        m2 = st.selectbox(
-            "الموديل 2", list(CAR_MODELS[b2].keys()), key="comp_m2"
-        )
-        info2 = CAR_MODELS[b2][m2]
-        st.markdown(
-            f"""
-        - 💰 السعر الأساسي: **{info2['price']:,.2f} ج.م**
-        - 🏎️ المحرك: **{info2['engine']}**
-        - 🚗 نمط الهيكل: **{info2['body']}**
-        - ⚡ قوة الحصان: **{info2['hp']} HP**
-        - ⛽ استهلاك الوقود: **{info2['fuel_consumption']} L/100km**
-        """
-        )
-
-    st.markdown("---")
-    st.subheader("📊 مقارنة الأداء والقوة")
-    comp_chart_df = pd.DataFrame(
-        {
-            "المؤشر": ["السعر (بالألف)", "قوة الحصان (HP)", "استهلاك الوقود"],
-            f"{b1} {m1}": [
-                info1["price"] / 1000,
-                info1["hp"],
-                info1["fuel_consumption"] * 10,
-            ],
-            f"{b2} {m2}": [
-                info2["price"] / 1000,
-                info2["hp"],
-                info2["fuel_consumption"] * 10,
-            ],
-        }
-    )
-    st.bar_chart(comp_chart_df.set_index("المؤشر"))
-
-
-# ================= 3. قسم مكتشف الميزانية الشامل =================
-elif app_mode == "مكتشف الميزانية الشامل":
-    st.title("💰 مكتشف السيارات حسب الميزانية المتاحة")
-    st.markdown("حدد ميزانيتك القصوى وسيعرض لك التطبيق كل السيارات المتاحة فوراً.")
-
-    user_budget = st.slider(
-        "أقصى ميزانية متاح (جنيه مصري):",
-        min_value=600000,
-        max_value=7000000,
-        value=1800000,
-        step=50000,
-    )
-
-    body_filter = st.selectbox(
-        "تصفية حسب نمط الهيكل (اختياري)",
-        ["الكل", "Sedan", "SUV", "Hatchback"],
-    )
-
-    matching_cars = []
-    for brand_name, models in CAR_MODELS.items():
-        for mod_name, data in models.items():
-            if data["price"] <= user_budget:
-                if body_filter == "الكل" or data["body"] == body_filter:
-                    matching_cars.append(
-                        {
-                            "الماركة": brand_name,
-                            "الموديل": mod_name,
-                            "السعر التقديري": f"{data['price']:,.2f} ج.م",
-                            "المحرك": data["engine"],
-                            "الهيكل": data["body"],
-                            "القدرة الحصانية": f"{data['hp']} HP",
-                        }
-                    )
-
-    if matching_cars:
-        st.success(
-            f"🎉 وجدنا {len(matching_cars)} سيارة تتناسب مع ميزانيتك وشروطك:"
-        )
-        st.dataframe(pd.DataFrame(matching_cars), use_container_width=True)
-    else:
-        st.warning(
-            "عذراً، لا توجد سيارات مطابقة لهذه الميزانية في قاعدة البيانات الحالية."
-        )
-
-
-# ================= 4. قسم إحصائيات وتحليلات السوق =================
-elif app_mode == "إحصائيات وتحليلات السوق":
-    st.title("📈 لوحة إحصائيات وتحليلات سوق السيارات")
-    st.markdown(
-        "نظرة عامة على الأسعار والمتوسطات العامة داخل قاعدة البيانات."
-    )
-
-    all_prices = [
-        data["price"]
-        for brand in CAR_MODELS.values()
-        for data in brand.values()
-    ]
-    avg_price = sum(all_prices) / len(all_prices)
-
-    col_stat1, col_stat2, col_stat3 = st.columns(3)
-    col_stat1.metric("إجمالي الموديلات المتاحة", len(all_prices))
-    col_stat2.metric("متوسط أسعار السوق", f"{avg_price:,.0f} ج.م")
-    col_stat3.metric("عدد الماركات العالمية", len(CAR_MODELS))
-
-    st.markdown("---")
-    st.subheader("📊 توزيع الأسعار حسب الماركات")
-    brand_avg_prices = {
-        b: sum(d["price"] for d in m.values()) / len(m)
-        for b, m in CAR_MODELS.items()
-    }
-    st.bar_chart(pd.Series(brand_avg_prices))
-
-
-# ================= 5. قسم سجل البحث والمفضلة =================
-elif app_mode == "سجل البحث والمفضلة":
-    st.title("📋 سجل عمليات البحث السابقة")
-
-    if st.session_state.history:
-        st.dataframe(pd.DataFrame(st.session_state.history), use_container_width=True)
-
-        if st.button("🗑️ مسح سجل البحث بالكامل"):
-            st.session_state.history = []
-            st.rerun()
-    else:
-        st.info(
-            "لا يوجد سجل بحث حتى الآن. قم بتجربة قسم توقع الأسعار لإنشاء سجلات جديدة!"
-        )
+        st.write(f"- السعر المبدئي: **{info1['base_price']:,.2f} ج.م**")
+        st.write(f"- الهيكل: **{info1['bod
