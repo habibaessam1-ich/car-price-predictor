@@ -7,9 +7,10 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# Comprehensive car database with engine capacity, body style, and horsepower
+# Comprehensive Car Database (All Brands Restored)
 # ---------------------------------------------------------
 CAR_MODELS = {
+    # 1. Japanese & Asian
     "Nissan": {
         "Sunny": {
             "price": 800000,
@@ -122,6 +123,227 @@ CAR_MODELS = {
             "hp": 160,
         },
     },
+    "Mitsubishi": {
+        "Lancer": {
+            "price": 750000,
+            "engine": "1.6L",
+            "body": "Sedan",
+            "hp": 115,
+        },
+        "Xpander": {
+            "price": 1300000,
+            "engine": "1.5L",
+            "body": "Van",
+            "hp": 103,
+        },
+        "Eclipse Cross": {
+            "price": 1600000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 150,
+        },
+        "Attrage": {
+            "price": 750000,
+            "engine": "1.2L",
+            "body": "Sedan",
+            "hp": 78,
+        },
+    },
+    "Suzuki": {
+        "Swift": {
+            "price": 750000,
+            "engine": "1.2L",
+            "body": "Hatchback",
+            "hp": 84,
+        },
+        "Ciaz": {"price": 850000, "engine": "1.5L", "body": "Sedan", "hp": 104},
+        "Ertiga": {"price": 950000, "engine": "1.5L", "body": "Van", "hp": 103},
+        "Espresso": {
+            "price": 550000,
+            "engine": "1.0L",
+            "body": "Hatchback",
+            "hp": 67,
+        },
+    },
+    "Honda": {
+        "Civic": {
+            "price": 1700000,
+            "engine": "1.5L Turbo",
+            "body": "Sedan",
+            "hp": 180,
+        },
+        "City": {"price": 1200000, "engine": "1.5L", "body": "Sedan", "hp": 121},
+        "CR-V": {
+            "price": 2200000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 190,
+        },
+    },
+    # 2. European
+    "Renault": {
+        "Logan": {"price": 650000, "engine": "1.6L", "body": "Sedan", "hp": 110},
+        "Megane": {
+            "price": 1400000,
+            "engine": "1.6L / 1.3T",
+            "body": "Sedan",
+            "hp": 115,
+        },
+        "Duster": {
+            "price": 1200000,
+            "engine": "1.6L",
+            "body": "SUV",
+            "hp": 115,
+        },
+        "Stepway": {
+            "price": 850000,
+            "engine": "1.6L",
+            "body": "Hatchback",
+            "hp": 110,
+        },
+    },
+    "Peugeot": {
+        "301": {"price": 850000, "engine": "1.6L", "body": "Sedan", "hp": 115},
+        "508": {
+            "price": 1800000,
+            "engine": "1.6L Turbo",
+            "body": "Sedan",
+            "hp": 165,
+        },
+        "2008": {
+            "price": 1450000,
+            "engine": "1.2L Turbo",
+            "body": "SUV",
+            "hp": 130,
+        },
+        "3008": {
+            "price": 1950000,
+            "engine": "1.6L Turbo",
+            "body": "SUV",
+            "hp": 180,
+        },
+        "5008": {
+            "price": 2200000,
+            "engine": "1.6L Turbo",
+            "body": "SUV",
+            "hp": 180,
+        },
+    },
+    "Fiat": {
+        "Tipo": {"price": 1050000, "engine": "1.6L", "body": "Sedan", "hp": 110},
+        "500": {
+            "price": 1100000,
+            "engine": "1.4L",
+            "body": "Hatchback",
+            "hp": 100,
+        },
+        "Punto": {
+            "price": 500000,
+            "engine": "1.4L",
+            "body": "Hatchback",
+            "hp": 77,
+        },
+    },
+    "Skoda": {
+        "Octavia": {
+            "price": 1850000,
+            "engine": "1.4L Turbo",
+            "body": "Sedan",
+            "hp": 150,
+        },
+        "Kodiaq": {
+            "price": 2600000,
+            "engine": "1.4L Turbo",
+            "body": "SUV",
+            "hp": 150,
+        },
+        "Karoq": {
+            "price": 2100000,
+            "engine": "1.4L Turbo",
+            "body": "SUV",
+            "hp": 150,
+        },
+        "Scala": {
+            "price": 1300000,
+            "engine": "1.6L",
+            "body": "Hatchback",
+            "hp": 110,
+        },
+    },
+    "Volkswagen": {
+        "Golf": {
+            "price": 1700000,
+            "engine": "1.4L Turbo",
+            "body": "Hatchback",
+            "hp": 150,
+        },
+        "Passat": {
+            "price": 1900000,
+            "engine": "1.4L Turbo",
+            "body": "Sedan",
+            "hp": 150,
+        },
+        "Tiguan": {
+            "price": 2500000,
+            "engine": "1.4L Turbo",
+            "body": "SUV",
+            "hp": 150,
+        },
+        "Jetta": {"price": 900000, "engine": "1.4L", "body": "Sedan", "hp": 125},
+    },
+    "Opel": {
+        "Astra": {
+            "price": 950000,
+            "engine": "1.4L Turbo",
+            "body": "Sedan",
+            "hp": 140,
+        },
+        "Corsa": {
+            "price": 1250000,
+            "engine": "1.2L Turbo",
+            "body": "Hatchback",
+            "hp": 130,
+        },
+        "Grandland": {
+            "price": 1750000,
+            "engine": "1.6L Turbo",
+            "body": "SUV",
+            "hp": 163,
+        },
+        "Mokka": {
+            "price": 1500000,
+            "engine": "1.2L Turbo",
+            "body": "SUV",
+            "hp": 130,
+        },
+    },
+    "Seat": {
+        "Ibiza": {
+            "price": 1250000,
+            "engine": "1.0L Turbo",
+            "body": "Hatchback",
+            "hp": 115,
+        },
+        "Leon": {
+            "price": 1600000,
+            "engine": "1.4L Turbo",
+            "body": "Hatchback",
+            "hp": 150,
+        },
+        "Ateca": {
+            "price": 1850000,
+            "engine": "1.4L Turbo",
+            "body": "SUV",
+            "hp": 150,
+        },
+        "Arona": {
+            "price": 1350000,
+            "engine": "1.0L Turbo",
+            "body": "SUV",
+            "hp": 115,
+        },
+    },
+    # 3. Chinese
     "MG": {
         "MG 5": {"price": 850000, "engine": "1.5L", "body": "Sedan", "hp": 118},
         "MG 6": {
@@ -173,6 +395,91 @@ CAR_MODELS = {
             "engine": "1.5L Turbo",
             "body": "SUV",
             "hp": 145,
+        },
+    },
+    "Geely": {
+        "Emgrand": {"price": 850000, "engine": "1.5L", "body": "Sedan", "hp": 102},
+        "Coolray": {
+            "price": 1300000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 175,
+        },
+        "Okavango": {
+            "price": 1650000,
+            "engine": "1.5L Hybrid",
+            "body": "SUV",
+            "hp": 190,
+        },
+    },
+    "Changan": {
+        "Alsvin": {"price": 650000, "engine": "1.5L", "body": "Sedan", "hp": 107},
+        "CS35 Plus": {
+            "price": 1150000,
+            "engine": "1.4L Turbo",
+            "body": "SUV",
+            "hp": 158,
+        },
+        "CS55 Plus": {
+            "price": 1350000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 185,
+        },
+    },
+    "BYD": {
+        "F3": {"price": 620000, "engine": "1.5L", "body": "Sedan", "hp": 108},
+        "Song Plus": {
+            "price": 1600000,
+            "engine": "Hybrid",
+            "body": "SUV",
+            "hp": 197,
+        },
+    },
+    "HAVAL": {
+        "H6": {
+            "price": 1450000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 150,
+        },
+        "Jolion": {
+            "price": 1200000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 147,
+        },
+    },
+    # 4. American & Luxury
+    "Chevrolet": {
+        "Optra": {"price": 750000, "engine": "1.5L", "body": "Sedan", "hp": 110},
+        "Aveo": {"price": 600000, "engine": "1.5L", "body": "Sedan", "hp": 105},
+        "Captiva": {
+            "price": 1500000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 148,
+        },
+        "Cruze": {"price": 650000, "engine": "1.6L", "body": "Sedan", "hp": 113},
+    },
+    "Ford": {
+        "Focus": {
+            "price": 1200000,
+            "engine": "1.5L",
+            "body": "Hatchback",
+            "hp": 120,
+        },
+        "EcoSport": {
+            "price": 1000000,
+            "engine": "1.0L Turbo",
+            "body": "SUV",
+            "hp": 123,
+        },
+        "Kuga": {
+            "price": 1400000,
+            "engine": "1.5L Turbo",
+            "body": "SUV",
+            "hp": 150,
         },
     },
     "BMW": {
@@ -227,6 +534,32 @@ CAR_MODELS = {
             "hp": 204,
         },
     },
+    "Audi": {
+        "A4": {
+            "price": 2800000,
+            "engine": "2.0L Turbo",
+            "body": "Sedan",
+            "hp": 190,
+        },
+        "A6": {
+            "price": 3900000,
+            "engine": "2.0L Turbo",
+            "body": "Sedan",
+            "hp": 245,
+        },
+        "Q3": {
+            "price": 2500000,
+            "engine": "1.4L Turbo",
+            "body": "SUV",
+            "hp": 150,
+        },
+        "Q7": {
+            "price": 4900000,
+            "engine": "3.0L Turbo",
+            "body": "SUV",
+            "hp": 340,
+        },
+    },
 }
 
 CAR_IMAGES = {
@@ -248,22 +581,22 @@ CAR_IMAGES = {
     "Nissan": (
         "https://images.unsplash.com/photo-1609521263047-f8d205293f24?auto=format&fit=crop&w=800&q=80"
     ),
-    "MG": (
+    "Chevrolet": (
         "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80"
     ),
-    "Chery": (
+    "Renault": (
         "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80"
     ),
 }
 
 # ---------------------------------------------------------
-# Initialize session state for search history
+# Session State Initialization
 # ---------------------------------------------------------
 if "history" not in st.session_state:
     st.session_state.history = []
 
 # ---------------------------------------------------------
-# Sidebar control panel for filtering and modes
+# Sidebar Navigation
 # ---------------------------------------------------------
 st.sidebar.title("🛠️ Control Panel")
 app_mode = st.sidebar.selectbox(
@@ -280,7 +613,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("👩‍💻 **Developers:** Salma Ahmed & Habiba Essam")
 
 # ---------------------------------------------------------
-# Section 1: Price Predictor (Main)
+# Section 1: Price Predictor
 # ---------------------------------------------------------
 if app_mode == "Price Predictor":
     st.title("🚗 Advanced Used Car Price Prediction System")
@@ -293,7 +626,6 @@ if app_mode == "Price Predictor":
         available_models = list(CAR_MODELS[brand].keys())
         model_name = st.selectbox("Car Model", available_models)
 
-        # Extract current model specs
         car_info = CAR_MODELS[brand][model_name]
         st.info(
             f"ℹ️ **Default Specs:** Engine: `{car_info['engine']}` | Body: `{car_info['body']}` | Power: `{car_info['hp']} HP`"
@@ -368,7 +700,6 @@ if app_mode == "Price Predictor":
             f"📊 **Expected Range (±5% Error Margin):** {min_price:,.2f} EGP — {max_price:,.2f} EGP"
         )
 
-        # Add record to session state history
         search_record = {
             "Brand": brand,
             "Model": model_name,
@@ -379,7 +710,6 @@ if app_mode == "Price Predictor":
         if search_record not in st.session_state.history:
             st.session_state.history.append(search_record)
 
-        # Price range visualization chart
         chart_data = pd.DataFrame(
             {
                 "Category": ["Minimum Price", "Estimated Price", "Maximum Price"],
@@ -389,7 +719,6 @@ if app_mode == "Price Predictor":
         st.subheader("📊 Price Range Analysis")
         st.bar_chart(chart_data.set_index("Category"))
 
-        # --- Mini Installment Calculator ---
         st.markdown("---")
         st.subheader("💳 Suggested Installment Calculator")
         col_p1, col_p2 = st.columns(2)
@@ -400,106 +729,4 @@ if app_mode == "Price Predictor":
             st.write(f"Down Payment Amount: **{down_payment:,.2f} EGP**")
             st.write(f"Loan Amount: **{loan_amount:,.2f} EGP**")
         with col_p2:
-            loan_years = st.selectbox(
-                "Loan Duration (Years)", [1, 2, 3, 4, 5]
-            )
-            interest_rate = 0.15  # Estimated annual interest rate 15%
-            total_with_interest = loan_amount * (1 + (interest_rate * loan_years))
-            monthly_installment = total_with_interest / (loan_years * 12)
-            st.write(
-                f"Approx. Monthly Installment: **{monthly_installment:,.2f} EGP / month**"
-            )
-
-        # --- CSV Report Download Button ---
-        st.markdown("---")
-        report_df = pd.DataFrame([search_record])
-        csv_data = report_df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            label="📥 Download Car Report (CSV)",
-            data=csv_data,
-            file_name=f"{brand}_{model_name}_report.csv",
-            mime="text/csv",
-        )
-
-# ---------------------------------------------------------
-# Section 2: Car Comparison
-# ---------------------------------------------------------
-elif app_mode == "Car Comparison":
-    st.title("⚖️ Side-by-Side Car Comparison")
-    st.markdown("Compare specifications and prices of two different cars.")
-
-    c1, c2 = st.columns(2)
-
-    with c1:
-        st.subheader("First Car")
-        b1 = st.selectbox("Brand 1", list(CAR_MODELS.keys()), key="b1")
-        m1 = st.selectbox("Model 1", list(CAR_MODELS[b1].keys()), key="m1")
-        info1 = CAR_MODELS[b1][m1]
-        st.write(f"- Base Price: **{info1['price']:,.2f} EGP**")
-        st.write(f"- Engine: **{info1['engine']}**")
-        st.write(f"- Body Style: **{info1['body']}**")
-        st.write(f"- Power: **{info1['hp']} HP**")
-
-    with c2:
-        st.subheader("Second Car")
-        b2 = st.selectbox("Brand 2", list(CAR_MODELS.keys()), key="b2")
-        m2 = st.selectbox("Model 2", list(CAR_MODELS[b2].keys()), key="m2")
-        info2 = CAR_MODELS[b2][m2]
-        st.write(f"- Base Price: **{info2['price']:,.2f} EGP**")
-        st.write(f"- Engine: **{info2['engine']}**")
-        st.write(f"- Body Style: **{info2['body']}**")
-        st.write(f"- Power: **{info2['hp']} HP**")
-
-# ---------------------------------------------------------
-# Section 3: Budget Finder
-# ---------------------------------------------------------
-elif app_mode == "Budget Finder":
-    st.title("💰 Advanced Budget Finder")
-    st.markdown(
-        "Set your maximum budget to discover matching cars available in the database."
-    )
-
-    max_budget = st.slider(
-        "Maximum Budget (EGP):",
-        min_value=500000,
-        max_value=7000000,
-        value=1500000,
-        step=50000,
-    )
-
-    matched_cars = []
-    for brand_name, models in CAR_MODELS.items():
-        for mod_name, data in models.items():
-            if data["price"] <= max_budget:
-                matched_cars.append(
-                    {
-                        "Brand": brand_name,
-                        "Model": mod_name,
-                        "Estimated Price": f"{data['price']:,.2f} EGP",
-                        "Engine": data["engine"],
-                        "Body Style": data["body"],
-                    }
-                )
-
-    if matched_cars:
-        st.success(f"Found {len(matched_cars)} cars matching your budget:")
-        df_matched = pd.DataFrame(matched_cars)
-        st.dataframe(df_matched, use_container_width=True)
-    else:
-        st.warning(
-            "Sorry, no cars are available under this budget in the current database."
-        )
-
-# ---------------------------------------------------------
-# Section 4: Search History
-# ---------------------------------------------------------
-elif app_mode == "Search History":
-    st.title("📋 Recent Search History")
-    if st.session_state.history:
-        df_history = pd.DataFrame(st.session_state.history)
-        st.dataframe(df_history, use_container_width=True)
-        if st.button("Clear History"):
-            st.session_state.history = []
-            st.rerun()
-    else:
-        st.info("No search history recorded yet. Try predicting a car price first!")
+    
