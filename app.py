@@ -7,7 +7,7 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# بيانات السيارات الشاملة مع سعة المحرك ونوع الهيكل
+# Comprehensive car database with engine capacity, body style, and horsepower
 # ---------------------------------------------------------
 CAR_MODELS = {
     "Nissan": {
@@ -257,80 +257,90 @@ CAR_IMAGES = {
 }
 
 # ---------------------------------------------------------
-# تهيئة الـ Session State لحفظ سجل البحث
+# Initialize session state for search history
 # ---------------------------------------------------------
 if "history" not in st.session_state:
     st.session_state.history = []
 
 # ---------------------------------------------------------
-# واجهة التطبيق الجانبية (Sidebar) للفلترة والميزانية
+# Sidebar control panel for filtering and modes
 # ---------------------------------------------------------
-st.sidebar.title("🛠️ لوحة التحكم والإعدادات")
+st.sidebar.title("🛠️ Control Panel")
 app_mode = st.sidebar.selectbox(
-    "اختر القسم:",
+    "Choose Section:",
     [
-        "حاسبة وسعر السيارة (Predictor)",
-        "مقارنة السيارات (Comparison)",
-        "فلتر حسب الميزانية (Budget Finder)",
-        "سجل البحث السابق (History)",
+        "Price Predictor",
+        "Car Comparison",
+        "Budget Finder",
+        "Search History",
     ],
 )
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("👩‍💻 **المطورون:** سلمى أحمد & حبيبة عصام")
+st.sidebar.markdown("👩‍💻 **Developers:** Salma Ahmed & Habiba Essam")
 
 # ---------------------------------------------------------
-# القسم الأول: التنبؤ بالسعر (الرئيسي)
+# Section 1: Price Predictor (Main)
 # ---------------------------------------------------------
-if app_mode == "حاسبة وسعر السيارة (Predictor)":
-    st.title("🚗 نظام تقييم وتوقع أسعار السيارات المتقدم")
+if app_mode == "Price Predictor":
+    st.title("🚗 Advanced Used Car Price Prediction System")
     st.markdown("---")
 
     col_input, col_img = st.columns([1.2, 1])
 
     with col_input:
-        brand = st.selectbox("ماركة السيارة (Brand)", sorted(list(CAR_MODELS.keys())))
+        brand = st.selectbox("Car Brand", sorted(list(CAR_MODELS.keys())))
         available_models = list(CAR_MODELS[brand].keys())
-        model_name = st.selectbox("موديل السيارة (Model)", available_models)
+        model_name = st.selectbox("Car Model", available_models)
 
-        # استخراج مواصفات الموديل الحالي
+        # Extract current model specs
         car_info = CAR_MODELS[brand][model_name]
         st.info(
-            f"ℹ️ **المواصفات الافتراضية:** المحرك: `{car_info['engine']}` | الهيكل: `{car_info['body']}` | القوة: `{car_info['hp']} حصان`"
+            f"ℹ️ **Default Specs:** Engine: `{car_info['engine']}` | Body: `{car_info['body']}` | Power: `{car_info['hp']} HP`"
         )
 
-        transmission = st.selectbox("ناقل الحركة (Transmission)", ["Automatic", "Manual"])
-        car_color = st.selectbox("لون السيارة", ["أبيض", "أسود", "فضي", "رمادي", "أحمر", "أزرق", "أخرى"])
+        transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
+        car_color = st.selectbox(
+            "Car Color", ["White", "Black", "Silver", "Gray", "Red", "Blue", "Other"]
+        )
 
     with col_img:
         img_url = CAR_IMAGES.get(
             brand,
             "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80",
         )
-        st.image(img_url, caption=f"{brand} - {model_name} Preview", use_container_width=True)
+        st.image(
+            img_url, caption=f"{brand} - {model_name} Preview", use_container_width=True
+        )
 
     car_condition = st.radio(
-        "حالة السيارة (Condition)",
-        ["Zero (Brand New)", "Nearly New (كسر زيرو)", "Used (مستعمل)"],
+        "Car Condition",
+        ["Zero (Brand New)", "Nearly New", "Used"],
         horizontal=True,
     )
 
     col1, col2 = st.columns(2)
 
     with col1:
-        year = st.number_input("سنة الصنع (Manufacturing Year)", min_value=2000, max_value=2026, value=2020)
-        fuel_type = st.selectbox("نوع الوقود (Fuel Type)", ["Petrol", "Diesel", "Hybrid", "Electric"])
+        year = st.number_input(
+            "Manufacturing Year", min_value=2000, max_value=2026, value=2020
+        )
+        fuel_type = st.selectbox(
+            "Fuel Type", ["Petrol", "Diesel", "Hybrid", "Electric"]
+        )
 
     with col2:
         if car_condition == "Zero (Brand New)":
             km_driven = 0
-            st.info("الكيلومترات المقطوعة: 0 كم (كسر زيرو / زيرو)")
+            st.info("Kilometers Driven: 0 KM (Brand New)")
         else:
-            km_driven = st.number_input("الكيلومترات المقطوعة (KM)", min_value=0, max_value=500000, value=60000)
+            km_driven = st.number_input(
+                "Kilometers Driven (KM)", min_value=0, max_value=500000, value=60000
+            )
 
     st.markdown("---")
 
-    if st.button("🚀 احسب السعر المتوقع الآن"):
+    if st.button("🚀 Predict Estimated Price"):
         base_price = car_info["price"]
 
         years_old = 2026 - year
@@ -338,11 +348,13 @@ if app_mode == "حاسبة وسعر السيارة (Predictor)":
         km_depreciation = min((km_driven / 20000) * 0.01, 0.15)
         trans_depreciation = 0.05 if transmission == "Manual" else 0.0
 
-        total_depreciation = age_depreciation + km_depreciation + trans_depreciation
+        total_depreciation = (
+            age_depreciation + km_depreciation + trans_depreciation
+        )
 
         if car_condition == "Zero (Brand New)":
             estimated_price = base_price
-        elif car_condition == "Nearly New (كسر زيرو)":
+        elif car_condition == "Nearly New":
             estimated_price = base_price * 0.92
         else:
             estimated_price = base_price * (1.0 - total_depreciation)
@@ -352,11 +364,11 @@ if app_mode == "حاسبة وسعر السيارة (Predictor)":
         max_price = estimated_price * 1.05
 
         st.success(
-            f"🎯 **السعر التقديري لـ ({brand} {model_name} - {year}):** {estimated_price:,.2f} جنيه مصري\n\n"
-            f"📊 **النطاق المتوقع (هامش خطأ ±5%):** {min_price:,.2f} ج.م — {max_price:,.2f} ج.م"
+            f"🎯 **Estimated Price for ({brand} {model_name} - {year}):** {estimated_price:,.2f} EGP\n\n"
+            f"📊 **Expected Range (±5% Error Margin):** {min_price:,.2f} EGP — {max_price:,.2f} EGP"
         )
 
-        # إضافة السجل إلى الـ Session State
+        # Add record to session state history
         search_record = {
             "Brand": brand,
             "Model": model_name,
@@ -367,82 +379,88 @@ if app_mode == "حاسبة وسعر السيارة (Predictor)":
         if search_record not in st.session_state.history:
             st.session_state.history.append(search_record)
 
-        # رسم بياني للنطاق السعري
+        # Price range visualization chart
         chart_data = pd.DataFrame(
             {
-                "الفئة": ["الحد الأدنى", "السعر التقديري", "الحد الأقصى"],
-                "السعر (ج.م)": [min_price, estimated_price, max_price],
+                "Category": ["Minimum Price", "Estimated Price", "Maximum Price"],
+                "Price (EGP)": [min_price, estimated_price, max_price],
             }
         )
-        st.subheader("📊 تحليل نطاق السعر")
-        st.bar_chart(chart_data.set_index("الفئة"))
+        st.subheader("📊 Price Range Analysis")
+        st.bar_chart(chart_data.set_index("Category"))
 
-        # --- حاسبة التقسيط المصغرة ---
+        # --- Mini Installment Calculator ---
         st.markdown("---")
-        st.subheader("💳 حاسبة الأقساط المقترحة")
+        st.subheader("💳 Suggested Installment Calculator")
         col_p1, col_p2 = st.columns(2)
         with col_p1:
-            down_payment_pct = st.slider("نسبة المقدم (%)", 20, 70, 30)
+            down_payment_pct = st.slider("Down Payment (%)", 20, 70, 30)
             down_payment = estimated_price * (down_payment_pct / 100)
             loan_amount = estimated_price - down_payment
-            st.write(f"مبلغ المقدم: **{down_payment:,.2f} ج.م**")
-            st.write(f"مبلغ التمويل/القرض: **{loan_amount:,.2f} ج.م**")
+            st.write(f"Down Payment Amount: **{down_payment:,.2f} EGP**")
+            st.write(f"Loan Amount: **{loan_amount:,.2f} EGP**")
         with col_p2:
-            loan_years = st.selectbox("مدة التقسيط (بالسنوات)", [1, 2, 3, 4, 5])
-            interest_rate = 0.15  # نسبة فائدة تقديرية سنوية 15%
+            loan_years = st.selectbox(
+                "Loan Duration (Years)", [1, 2, 3, 4, 5]
+            )
+            interest_rate = 0.15  # Estimated annual interest rate 15%
             total_with_interest = loan_amount * (1 + (interest_rate * loan_years))
             monthly_installment = total_with_interest / (loan_years * 12)
-            st.write(f"القسط الشهري التقريبي: **{monthly_installment:,.2f} ج.م / شهرياً**")
+            st.write(
+                f"Approx. Monthly Installment: **{monthly_installment:,.2f} EGP / month**"
+            )
 
-        # --- زر تصدير التقرير (CSV) ---
+        # --- CSV Report Download Button ---
         st.markdown("---")
         report_df = pd.DataFrame([search_record])
         csv_data = report_df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="📥 تحميل تقرير السيارة (CSV)",
+            label="📥 Download Car Report (CSV)",
             data=csv_data,
             file_name=f"{brand}_{model_name}_report.csv",
             mime="text/csv",
         )
 
 # ---------------------------------------------------------
-# القسم الثاني: مقارنة السيارات
+# Section 2: Car Comparison
 # ---------------------------------------------------------
-elif app_mode == "مقارنة السيارات (Comparison)":
-    st.title("⚖️ مقارنة بين سيارتين")
-    st.markdown("قارن بين مواصفات وأسعار سيارتين جنباً إلى جنب.")
+elif app_mode == "Car Comparison":
+    st.title("⚖️ Side-by-Side Car Comparison")
+    st.markdown("Compare specifications and prices of two different cars.")
 
     c1, c2 = st.columns(2)
 
     with c1:
-        st.subheader("السيارة الأولى")
-        b1 = st.selectbox("الماركة 1", list(CAR_MODELS.keys()), key="b1")
-        m1 = st.selectbox("الموديل 1", list(CAR_MODELS[b1].keys()), key="m1")
+        st.subheader("First Car")
+        b1 = st.selectbox("Brand 1", list(CAR_MODELS.keys()), key="b1")
+        m1 = st.selectbox("Model 1", list(CAR_MODELS[b1].keys()), key="m1")
         info1 = CAR_MODELS[b1][m1]
-        st.write(f"- السعر الأساسي: **{info1['price']:,.2f} ج.م**")
-        st.write(f"- المحرك: **{info1['engine']}**")
-        st.write(f"- الهيكل: **{info1['body']}**")
-        st.write(f"- القوة: **{info1['hp']} حصان**")
+        st.write(f"- Base Price: **{info1['price']:,.2f} EGP**")
+        st.write(f"- Engine: **{info1['engine']}**")
+        st.write(f"- Body Style: **{info1['body']}**")
+        st.write(f"- Power: **{info1['hp']} HP**")
 
     with c2:
-        st.subheader("السيارة الثانية")
-        b2 = st.selectbox("الماركة 2", list(CAR_MODELS.keys()), key="b2")
-        m2 = st.selectbox("الموديل 2", list(CAR_MODELS[b2].keys()), key="m2")
+        st.subheader("Second Car")
+        b2 = st.selectbox("Brand 2", list(CAR_MODELS.keys()), key="b2")
+        m2 = st.selectbox("Model 2", list(CAR_MODELS[b2].keys()), key="m2")
         info2 = CAR_MODELS[b2][m2]
-        st.write(f"- السعر الأساسي: **{info2['price']:,.2f} ج.م**")
-        st.write(f"- المحرك: **{info2['engine']}**")
-        st.write(f"- الهيكل: **{info2['body']}**")
-        st.write(f"- القوة: **{info2['hp']} حصان**")
+        st.write(f"- Base Price: **{info2['price']:,.2f} EGP**")
+        st.write(f"- Engine: **{info2['engine']}**")
+        st.write(f"- Body Style: **{info2['body']}**")
+        st.write(f"- Power: **{info2['hp']} HP**")
 
 # ---------------------------------------------------------
-# القسم الثالث: البحث حسب الميزانية
+# Section 3: Budget Finder
 # ---------------------------------------------------------
-elif app_mode == "فلتر حسب الميزانية (Budget Finder)":
-    st.title("💰 البحث المتقدم حسب الميزانية")
-    st.markdown("حدد ميزانيتك لنقترح عليك السيارات المناسبة المتاحة في القائمة.")
+elif app_mode == "Budget Finder":
+    st.title("💰 Advanced Budget Finder")
+    st.markdown(
+        "Set your maximum budget to discover matching cars available in the database."
+    )
 
     max_budget = st.slider(
-        "أقصى ميزانية لديك (بالجنيه المصري):",
+        "Maximum Budget (EGP):",
         min_value=500000,
         max_value=7000000,
         value=1500000,
@@ -455,31 +473,33 @@ elif app_mode == "فلتر حسب الميزانية (Budget Finder)":
             if data["price"] <= max_budget:
                 matched_cars.append(
                     {
-                        "الماركة": brand_name,
-                        "الموديل": mod_name,
-                        "السعر التقديري": f"{data['price']:,.2f} ج.م",
-                        "المحرك": data["engine"],
-                        "الهيكل": data["body"],
+                        "Brand": brand_name,
+                        "Model": mod_name,
+                        "Estimated Price": f"{data['price']:,.2f} EGP",
+                        "Engine": data["engine"],
+                        "Body Style": data["body"],
                     }
                 )
 
     if matched_cars:
-        st.success(f"تم العثور على {lenطات := len(matched_cars)} سيارة تناسب ميزانيتك:")
+        st.success(f"Found {len(matched_cars)} cars matching your budget:")
         df_matched = pd.DataFrame(matched_cars)
         st.dataframe(df_matched, use_container_width=True)
     else:
-        st.warning("عذراً، لا توجد سيارات أقل من هذه الميزانية في قاعدة البيانات الحالية.")
+        st.warning(
+            "Sorry, no cars are available under this budget in the current database."
+        )
 
 # ---------------------------------------------------------
-# القسم الرابع: سجل البحث السابق
+# Section 4: Search History
 # ---------------------------------------------------------
-elif app_mode == "سجل البحث السابق (History)":
-    st.title("📋 سجل عمليات البحث الأخيرة")
+elif app_mode == "Search History":
+    st.title("📋 Recent Search History")
     if st.session_state.history:
         df_history = pd.DataFrame(st.session_state.history)
         st.dataframe(df_history, use_container_width=True)
-        if st.button("مسح السجل"):
+        if st.button("Clear History"):
             st.session_state.history = []
             st.rerun()
     else:
-        st.info("لا توجد عمليات بحث مسجلة حتى الآن. جرب البحث عن سيارة في القسم الرئيسي!")
+        st.info("No search history recorded yet. Try predicting a car price first!")
