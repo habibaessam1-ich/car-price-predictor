@@ -78,7 +78,7 @@ engine_cc = st.sidebar.slider("Engine Capacity (CC)", 1000, 4000, 1600, step=100
 condition_score = st.sidebar.slider("Body & Mechanical Condition Score (%)", 50, 100, 85)
 
 if brand in CAR_IMAGES:
-    st.sidebar.image(CAR_IMAGES[brand], caption=f"{brand} Model Reference", use_column_width=True)
+    st.sidebar.image(CAR_IMAGES[brand], caption=f"{brand} Model Reference", use_container_width=True)
 
 tab1, tab2, tab3, tab4 = st.tabs(["💰 Price Prediction", "📊 Market Trends", "📉 Installment Calculator", "⛽ Fuel Analysis"])
 
