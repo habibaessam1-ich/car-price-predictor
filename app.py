@@ -906,7 +906,7 @@ app_mode = st.sidebar.selectbox(
 )
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("👩‍💻 **Developers:** Salma Ahmed & Habiba Essam")
+st.sidebar.markdown("👩‍💻 **Developers:**Habiba Essam & Salma Ahmed")
 
 # ================= 1. Price Predictor Section =================
 if app_mode == "Price Predictor":
