@@ -1,18 +1,33 @@
-import sys
 import joblib
 import pandas as pd
 import streamlit as st
 
-# حل مشكلة اسم المكتبة المكتوب غلط جوه ملف الموديل
-sys.modules['mport pandas as pd'] = pd
-
-# إعدادات الصفحة
 st.set_page_config(
     page_title="Car Price Predictor", page_icon="🚗", layout="centered"
 )
 
+# --- إضافة CSS لتخصيص الألوان والستايل بشكل إضافي ---
+st.markdown(
+    """
+    <style>
+    .stButton>button {
+        width: 100%;
+        background-color: #2E7D32;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        height: 3em;
+    }
+    .stSuccess {
+        background-color: #1b3820;
+        border: 1px solid #2E7D32;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
 
-# تحميل الموديل المجهز
+
 @st.cache_resource
 def load_model():
     return joblib.load("car_price_pipeline.pkl")
@@ -20,56 +35,23 @@ def load_model():
 
 pipeline = load_model()
 
-# 1. قاموس لربط ماركة كل سيارة برابط صورة عالية الجودة
-CAR_IMAGES = {
-    "BMW": (
-        "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Mercedes": (
-        "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Toyota": (
-        "https://images.unsplash.com/photo-1629897048514-3dd7414fe72a?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Hyundai": (
-        "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Kia": (
-        "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Nissan": (
-        "https://images.unsplash.com/photo-1609521263047-f8d205293f24?auto=format&fit=crop&w=800&q=80"
-    ),
-    "Chevrolet": (
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80"
-    ),
-}
-
-# عنوان التطبيق واسم الفريق
 st.title("🚗 Used Car Price Prediction System")
 
 st.markdown("---")
-st.markdown("👩‍💻 **Developed by:** Salma Ahmed & Habiba Essam")
+st.markdown("👩‍💻 **Developed by:** Habiba Essam & Salma Ahmed")
 st.markdown("---")
 
 st.write("Enter the car specifications to get the estimated price.")
 
-# 2. تقسيم الشاشة لعمودين: المدخلات والصورة التفاعلية
-col_input, col_img = st.columns([1.2, 1])
+brand = st.selectbox(
+    "Car Brand",
+    ["Toyota", "Hyundai", "Kia", "Nissan", "Chevrolet", "BMW", "Mercedes"],
+)
+car_type = st.selectbox(
+    "Car Type / Model", ["Sedan", "SUV", "Hatchback", "Coupe"]
+)
+transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
 
-with col_input:
-    brand = st.selectbox("Car Brand", list(CAR_IMAGES.keys()))
-    car_type = st.selectbox(
-        "Car Type / Model", ["Sedan", "SUV", "Hatchback", "Coupe"]
-    )
-    transmission = st.selectbox("Transmission", ["Automatic", "Manual"])
-
-with col_img:
-    st.image(
-        CAR_IMAGES[brand], caption=f"{brand} Preview", use_container_width=True
-    )
-
-# اختيار حالة السيارة
 car_condition = st.radio(
     "Car Condition",
     ["Zero (Brand New)", "Nearly New (كسر زيرو)", "Used (مستعمل)"],
@@ -97,7 +79,6 @@ with col2:
 
 st.markdown("---")
 
-# زر التوقع والحسابات
 if st.button("Predict Price"):
     input_data = pd.DataFrame({
         "brand": [brand],
@@ -111,35 +92,59 @@ if st.button("Predict Price"):
     try:
         base_prediction = pipeline.predict(input_data)[0]
 
-        # معامل ضرب الفئات والموديلات
+        # Multiplier
         if brand in ["BMW", "Mercedes"]:
-            if year >= 2021:
-                multiplier = 6.5
-            elif year >= 2017:
-                multiplier = 4.5
-            else:
-                multiplier = 3.0
+            multiplier = 6.5 if year >= 2021 else (4.5 if year >= 2017 else 3.0)
         else:
-            if year >= 2022:
-                multiplier = 3.2
-            elif year >= 2018:
-                multiplier = 2.4
-            elif year >= 2012:
-                multiplier = 1.8
-            else:
-                multiplier = 1.3
+            multiplier = (
+                3.2
+                if year >= 2022
+                else (1.8 if year >= 2012 else 1.3)
+            )
 
-        # معامل حالة السيارة
-        if car_condition == "Zero (Brand New)":
-            condition_multiplier = 1.25
-        elif car_condition == "Nearly New (كسر زيرو)":
-            condition_multiplier = 1.10
-        else:
-            condition_multiplier = 1.0
+        condition_multiplier = (
+            1.25
+            if car_condition == "Zero (Brand New)"
+            else (1.10 if car_condition == "Nearly New (كسر زيرو)" else 1.0)
+        )
 
         final_price = base_prediction * multiplier * condition_multiplier
 
-        st.success(f"The estimated car price is: {final_price:,.2f} EGP")
+        # حساب نطاق السعر (Min / Max Range)
+        min_price = final_price * 0.95
+        max_price = final_price * 1.05
+
+        st.success(f"**Estimated Price:** {final_price:,.2f} EGP")
+        st.info(
+            f"💡 **Expected Market Range:** {min_price:,.2f} - {max_price:,.2f}"
+            " EGP"
+        )
+
+        # 1. إمكانية تحميل التقرير (Download Report Option)
+        report_data = input_data.copy()
+        report_data["Estimated_Price_EGP"] = final_price
+        csv = report_data.to_csv(index=False).encode("utf-8")
+
+        st.download_button(
+            label="📄 Download Valuation Report (CSV)",
+            data=csv,
+            file_name=f"car_valuation_{brand}_{year}.csv",
+            mime="text/csv",
+        )
+
+        # 2. حاسبة التقسيط السريعة (Finance Calculator Option)
+        with st.expander("💳 Estimated Monthly Installment Calculator"):
+            down_payment_pct = st.slider(
+                "Down Payment (%)", 10, 50, 20
+            )
+            years = st.selectbox("Loan Duration (Years)", [1, 2, 3, 4, 5])
+
+            loan_amount = final_price * (1 - (down_payment_pct / 100))
+            monthly_payment = (
+                loan_amount * (1 + 0.15 * years)
+            ) / (years * 12)  # افتراض فائدة 15% سنوية
+
+            st.write(f"**Estimated Monthly Payment:** {monthly_payment:,.2f} EGP/month")
 
     except Exception as e:
-        st.error(f"An error occurred during prediction: {e}")
+        st.error(f"Error during prediction: {e}")
