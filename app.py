@@ -772,4 +772,4 @@ CAR_IMAGES = {
     "Toyota": "https://images.unsplash.com/photo-1629897048514-3dd7414fe72a?auto=format&fit=crop&w=800&q=80",
     "Hyundai": "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=800&q=80",
     "Kia": "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80",
-    "Nissan": "https://images.unsplash.com/photo-1609521263047-
+    "Nissan": "https://images.unsplash.com/photo-1609521263047-"
