@@ -6,11 +6,8 @@ st.set_page_config(
     page_title="Car Price Predictor Pro", page_icon="🚗", layout="wide"
 )
 
-# ---------------------------------------------------------
-# Comprehensive Car Database (All Brands Restored)
-# ---------------------------------------------------------
+# Comprehensive Car Database
 CAR_MODELS = {
-    # 1. Japanese & Asian
     "Nissan": {
         "Sunny": {
             "price": 800000,
@@ -180,7 +177,6 @@ CAR_MODELS = {
             "hp": 190,
         },
     },
-    # 2. European
     "Renault": {
         "Logan": {"price": 650000, "engine": "1.6L", "body": "Sedan", "hp": 110},
         "Megane": {
@@ -343,7 +339,6 @@ CAR_MODELS = {
             "hp": 115,
         },
     },
-    # 3. Chinese
     "MG": {
         "MG 5": {"price": 850000, "engine": "1.5L", "body": "Sedan", "hp": 118},
         "MG 6": {
@@ -450,7 +445,6 @@ CAR_MODELS = {
             "hp": 147,
         },
     },
-    # 4. American & Luxury
     "Chevrolet": {
         "Optra": {"price": 750000, "engine": "1.5L", "body": "Sedan", "hp": 110},
         "Aveo": {"price": 600000, "engine": "1.5L", "body": "Sedan", "hp": 105},
@@ -589,15 +583,11 @@ CAR_IMAGES = {
     ),
 }
 
-# ---------------------------------------------------------
 # Session State Initialization
-# ---------------------------------------------------------
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# ---------------------------------------------------------
 # Sidebar Navigation
-# ---------------------------------------------------------
 st.sidebar.title("🛠️ Control Panel")
 app_mode = st.sidebar.selectbox(
     "Choose Section:",
@@ -612,9 +602,7 @@ app_mode = st.sidebar.selectbox(
 st.sidebar.markdown("---")
 st.sidebar.markdown("👩‍💻 **Developers:** Salma Ahmed & Habiba Essam")
 
-# ---------------------------------------------------------
 # Section 1: Price Predictor
-# ---------------------------------------------------------
 if app_mode == "Price Predictor":
     st.title("🚗 Advanced Used Car Price Prediction System")
     st.markdown("---")
@@ -729,4 +717,17 @@ if app_mode == "Price Predictor":
             st.write(f"Down Payment Amount: **{down_payment:,.2f} EGP**")
             st.write(f"Loan Amount: **{loan_amount:,.2f} EGP**")
         with col_p2:
-    
+            loan_years = st.selectbox(
+                "Loan Duration (Years)", [1, 2, 3, 4, 5]
+            )
+            interest_rate = 0.15
+            total_with_interest = loan_amount * (1 + (interest_rate * loan_years))
+            monthly_installment = total_with_interest / (loan_years * 12)
+            st.write(
+                f"Approx. Monthly Installment: **{monthly_installment:,.2f} EGP / month**"
+            )
+
+        st.markdown("---")
+        report_df = pd.DataFrame([search_record])
+        csv_data = report_df.to_csv(index=False).encode("utf-8")
+        st.download_butt
