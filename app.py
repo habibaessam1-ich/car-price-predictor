@@ -774,4 +774,368 @@ CAR_MODELS = {
         },
     },
     "Subaru": {
-     
+        "Impreza": {
+            "engines": ["2.0L Boxer"],
+            "base_price": 1350000,
+            "body": "Hatchback",
+            "hp": 152,
+        },
+        "XV / Crosstrek": {
+            "engines": ["2.0L Boxer"],
+            "base_price": 1500000,
+            "body": "SUV",
+            "hp": 152,
+        },
+        "Forester": {
+            "engines": ["2.5L Boxer"],
+            "base_price": 1900000,
+            "body": "SUV",
+            "hp": 182,
+        },
+    },
+    "Lexus": {
+        "ES 300h": {
+            "engines": ["2.5L Hybrid"],
+            "base_price": 4200000,
+            "body": "Sedan",
+            "hp": 215,
+        },
+        "RX 350": {
+            "engines": ["2.4L Turbo"],
+            "base_price": 5800000,
+            "body": "SUV",
+            "hp": 275,
+        },
+        "LX 600": {
+            "engines": ["3.5L Twin-Turbo V6"],
+            "base_price": 9800000,
+            "body": "SUV",
+            "hp": 409,
+        },
+    },
+    "Haval": {
+        "Jolion": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1100000,
+            "body": "SUV",
+            "hp": 147,
+        },
+        "H6": {
+            "engines": ["1.5L Turbo", "2.0L Turbo"],
+            "base_price": 1350000,
+            "body": "SUV",
+            "hp": 201,
+        },
+    },
+    "Jetour": {
+        "X70": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1050000,
+            "body": "SUV",
+            "hp": 147,
+        },
+        "X70 Plus": {
+            "engines": ["1.5L Turbo", "1.6L Turbo"],
+            "base_price": 1250000,
+            "body": "SUV",
+            "hp": 194,
+        },
+        "Dashing": {
+            "engines": ["1.5L Turbo", "1.6L Turbo"],
+            "base_price": 1350000,
+            "body": "SUV",
+            "hp": 156,
+        },
+    },
+    "BAIC": {
+        "X7": {
+            "engines": ["1.5L Turbo"],
+            "base_price": 1450000,
+            "body": "SUV",
+            "hp": 185,
+        },
+        "U5 Plus": {
+            "engines": ["1.5L Normal"],
+            "base_price": 750000,
+            "body": "Sedan",
+            "hp": 111,
+        },
+    },
+    "Opel": {
+        "Corsa": {
+            "engines": ["1.2L Turbo"],
+            "base_price": 1100000,
+            "body": "Hatchback",
+            "hp": 130,
+        },
+        "Crossland": {
+            "engines": ["1.2L Turbo"],
+            "base_price": 1300000,
+            "body": "SUV",
+            "hp": 110,
+        },
+        "Mokka": {
+            "engines": ["1.2L Turbo"],
+            "base_price": 1450000,
+            "body": "SUV",
+            "hp": 130,
+        },
+        "Grandland": {
+            "engines": ["1.6L Turbo"],
+            "base_price": 1750000,
+            "body": "SUV",
+            "hp": 180,
+        },
+    },
+}
+
+# Session State Initialization
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+# Sidebar Navigation
+st.sidebar.title("🛠️ Control Panel")
+app_mode = st.sidebar.selectbox(
+    "Choose Section:",
+    [
+        "Price Predictor",
+        "Car Comparison",
+        "Budget Finder",
+        "Search History",
+    ],
+)
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("👩‍💻 **Developers:** Salma Ahmed & Habiba Essam")
+
+# ================= 1. Price Predictor Section =================
+if app_mode == "Price Predictor":
+    st.title("🚗 Advanced Car Price Prediction System")
+    st.markdown(
+        "Select the brand, model, engine option, and extras to estimate the market price."
+    )
+    st.markdown("---")
+
+    col_input, col_info_box = st.columns([1.3, 1])
+
+    with col_input:
+        brand = st.selectbox("Car Brand", sorted(list(CAR_MODELS.keys())))
+        available_models = list(CAR_MODELS[brand].keys())
+        model_name = st.selectbox("Car Model", available_models)
+
+        car_data = CAR_MODELS[brand][model_name]
+
+        # Engine selection
+        selected_engine = st.selectbox(
+            "Engine Capacity & Type", car_data["engines"]
+        )
+
+        transmission = st.selectbox(
+            "Transmission", ["Automatic", "Manual"]
+        )
+
+        year = st.slider("Manufacturing Year", 2010, 2026, 2022)
+
+        car_condition = st.radio(
+            "Car Condition",
+            ["Brand New (Zero)", "Nearly New", "Used in Good Condition"],
+            horizontal=True,
+        )
+
+        if car_condition == "Brand New (Zero)":
+            km_driven = 0
+            st.info("Car is brand new (0 KM)")
+        else:
+            km_driven = st.number_input(
+                "Kilometers Driven (KM)",
+                min_value=0,
+                max_value=400000,
+                value=50000,
+                step=5000,
+            )
+
+    with col_info_box:
+        st.subheader("✨ Car Extras & Options")
+        st.markdown("Check available features in the car:")
+
+        has_sunroof = st.checkbox("☀️ Sunroof / Panoramic Glass (+2.5%)")
+        has_leather = st.checkbox("💺 Leather Seats (+1.5%)")
+        has_start_engine = st.checkbox(
+            "🔑 Push Start Button & Smart Key (+1.5%)"
+        )
+        has_sensors_cam = st.checkbox(
+            "📷 Rear Camera & Parking Sensors (+1.5%)"
+        )
+        has_alloy_wheels = st.checkbox("🛞 Original Alloy Wheels (+1%)")
+        has_screens = st.checkbox("📱 Smart Media Display (+1%)")
+
+        st.markdown("---")
+        st.info(
+            f"ℹ️ **Base Specs:**\n- Body Type: `{car_data['body']}`\n- Horsepower: `{car_data['hp']} HP`\n- Selected Engine: `{selected_engine}`"
+        )
+
+    st.markdown("---")
+
+    if st.button("🚀 Calculate Estimated Price"):
+        base_price = car_data["base_price"]
+
+        # Adjust price based on engine type
+        if "Turbo" in selected_engine or "Hybrid" in selected_engine:
+            base_price *= 1.08
+        if "V6" in selected_engine or "V8" in selected_engine or "Electric" in selected_engine:
+            base_price *= 1.15
+
+        years_old = 2026 - year
+        age_dep = min(years_old * 0.03, 0.45)
+        km_dep = min((km_driven / 15000) * 0.012, 0.20)
+        trans_dep = 0.05 if transmission == "Manual" else 0.0
+
+        total_depreciation = 1.0 - (age_dep + km_dep + trans_dep)
+
+        if car_condition == "Brand New (Zero)":
+            estimated_price = base_price
+        elif car_condition == "Nearly New":
+            estimated_price = base_price * 0.96
+        else:
+            estimated_price = base_price * max(total_depreciation, 0.35)
+
+        # Extras multiplier
+        extras_multiplier = 1.0
+        if has_sunroof:
+            extras_multiplier += 0.025
+        if has_leather:
+            extras_multiplier += 0.015
+        if has_start_engine:
+            extras_multiplier += 0.015
+        if has_sensors_cam:
+            extras_multiplier += 0.015
+        if has_alloy_wheels:
+            extras_multiplier += 0.010
+        if has_screens:
+            extras_multiplier += 0.010
+
+        estimated_price *= extras_multiplier
+
+        min_price = estimated_price * 0.95
+        max_price = estimated_price * 1.05
+
+        st.success(
+            f"🎯 **Estimated Price for ({brand} - {model_name}):**\n"
+            f"### `{estimated_price:,.2f}` EGP\n\n"
+            f"📊 **Expected Market Range:** `{min_price:,.2f}` EGP to `{max_price:,.2f}` EGP"
+        )
+
+        search_record = {
+            "Brand": brand,
+            "Model": model_name,
+            "Engine": selected_engine,
+            "Year": year,
+            "Estimated Price": f"{estimated_price:,.2f} EGP",
+            "Condition": car_condition,
+        }
+        if search_record not in st.session_state.history:
+            st.session_state.history.append(search_record)
+
+        chart_data = pd.DataFrame(
+            {
+                "Category": ["Minimum Price", "Estimated Price", "Maximum Price"],
+                "Price (EGP)": [min_price, estimated_price, max_price],
+            }
+        )
+        st.subheader("📊 Price Range Analysis")
+        st.bar_chart(chart_data.set_index("Category"))
+
+        st.markdown("---")
+        st.subheader("💳 Suggested Installment Calculator")
+        cp1, cp2 = st.columns(2)
+        with cp1:
+            down_payment_pct = st.slider("Down Payment (%)", 20, 70, 30)
+            down_payment = estimated_price * (down_payment_pct / 100)
+            loan_amt = estimated_price - down_payment
+            st.write(f"Down Payment Amount: **{down_payment:,.2f} EGP**")
+            st.write(f"Loan Amount: **{loan_amt:,.2f} EGP**")
+        with cp2:
+            duration = st.selectbox("Loan Duration (Years)", [1, 2, 3, 4, 5, 7])
+            interest_rate = 0.16
+            total_with_interest = loan_amt * (1 + (interest_rate * duration))
+            monthly = total_with_interest / (duration * 12)
+            st.write(f"Approx. Monthly Installment: **{monthly:,.2f} EGP / month**")
+
+        st.markdown("---")
+        csv_bytes = pd.DataFrame([search_record]).to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="📥 Download Car Report (CSV)",
+            data=csv_bytes,
+            file_name="car_price_report.csv",
+            mime="text/csv",
+        )
+
+
+# ================= 2. Car Comparison Section =================
+elif app_mode == "Car Comparison":
+    st.title("⚖️ Side-by-Side Car Comparison")
+    st.markdown("Compare specifications and base prices of two different cars.")
+
+    mc1, mc2 = st.columns(2)
+
+    with mc1:
+        st.subheader("First Car")
+        b1 = st.selectbox("Brand 1", sorted(list(CAR_MODELS.keys())), key="b1")
+        m1 = st.selectbox("Model 1", list(CAR_MODELS[b1].keys()), key="m1")
+        info1 = CAR_MODELS[b1][m1]
+        st.write(f"- Base Price: **{info1['base_price']:,.2f} EGP**")
+        st.write(f"- Body Type: **{info1['body']}**")
+        st.write(f"- Horsepower: **{info1['hp']} HP**")
+        st.write(f"- Available Engines: {', '.join(info1['engines'])}")
+
+    with mc2:
+        st.subheader("Second Car")
+        b2 = st.selectbox("Brand 2", sorted(list(CAR_MODELS.keys())), key="b2")
+        m2 = st.selectbox("Model 2", list(CAR_MODELS[b2].keys()), key="m2")
+        info2 = CAR_MODELS[b2][m2]
+        st.write(f"- Base Price: **{info2['base_price']:,.2f} EGP**")
+        st.write(f"- Body Type: **{info2['body']}**")
+        st.write(f"- Horsepower: **{info2['hp']} HP**")
+        st.write(f"- Available Engines: {', '.join(info2['engines'])}")
+
+
+# ================= 3. Budget Finder Section =================
+elif app_mode == "Budget Finder":
+    st.title("💰 Budget Finder")
+    st.markdown("Set your maximum budget to find matching cars.")
+
+    user_budget = st.slider(
+        "Maximum Budget (EGP):", 600000, 15000000, 1500000, step=50000
+    )
+
+    matched = []
+    for br, mods in CAR_MODELS.items():
+        for md, dt in mods.items():
+            if dt["base_price"] <= user_budget:
+                matched.append(
+                    {
+                        "Brand": br,
+                        "Model": md,
+                        "Base Price": f"{dt['base_price']:,.2f} EGP",
+                        "Body Type": dt["body"],
+                        "Horsepower": f"{dt['hp']} HP",
+                    }
+                )
+
+    if matched:
+        st.success(f"Found {len(matched)} cars matching your budget:")
+        st.dataframe(pd.DataFrame(matched), use_container_width=True)
+    else:
+        st.warning("No cars available under this budget.")
+
+
+# ================= 4. Search History Section =================
+elif app_mode == "Search History":
+    st.title("📋 Search History")
+    if st.session_state.history:
+        st.dataframe(pd.DataFrame(st.session_state.history), use_container_width=True)
+        if st.button("🗑️ Clear History"):
+            st.session_state.history = []
+            st.rerun()
+    else:
+        st.info("No search history recorded yet.")
