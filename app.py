@@ -89,7 +89,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. Comprehensive Database with Realistic Egyptian Prices
+# 2. Comprehensive Database with Fixed Image URLs & Prices
 # ---------------------------------------------------------
 CAR_DATA = {
     "Kia": {
@@ -101,7 +101,7 @@ CAR_DATA = {
             "Sorento": 3200000,
             "Pegas": 850000
         },
-        "image": "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&q=80&w=800"
+        "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=800"
     },
     "Toyota": {
         "models": {
@@ -112,7 +112,7 @@ CAR_DATA = {
             "Belta": 880000,
             "Rumion": 920000
         },
-        "image": "https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=800"
+        "image": "https://images.unsplash.com/photo-1629897048983-85f8dc4e4abc?auto=format&fit=crop&q=80&w=800"
     },
     "Hyundai": {
         "models": {
@@ -132,7 +132,7 @@ CAR_DATA = {
             "Qashqai": 1600000,
             "Juke": 1200000
         },
-        "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=800"
+        "image": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&q=80&w=800"
     },
     "MG": {
         "models": {
@@ -320,6 +320,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 st.markdown(f'''
     <div class="price-card-main">
         <h4>Estimated Market Value ({trim.split('(')[0].strip()})</h4>
+        2026 Base Price Applied
         <h2>{final_price:,} EGP</h2>
     </div>
 ''', unsafe_allow_html=True)
