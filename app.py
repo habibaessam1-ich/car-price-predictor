@@ -212,14 +212,17 @@ TRIM_MULTIPLIERS = {
 }
 
 # ---------------------------------------------------------
-# 3. Dynamic Session State & Mileage Handling
+# 3. Dynamic Session State & Auto Reset
 # ---------------------------------------------------------
 if 'mileage_val' not in st.session_state:
     st.session_state.mileage_val = 60000
+if 'mech_val' not in st.session_state:
+    st.session_state.mech_val = 90
 
 def handle_year_change():
     if st.session_state.selected_year == 2026:
         st.session_state.mileage_val = 0
+        st.session_state.mech_val = 100
 
 # ---------------------------------------------------------
 # 4. Header Section
@@ -267,7 +270,13 @@ with st.expander("⚙️ **Configure Vehicle Specs & Trim**", expanded=True):
             "Partial Repairs",
             "Fully Repainted"
         ])
-        mechanical_condition = st.slider("Mechanical Condition (%)", 50, 100, 90)
+        
+        mechanical_condition = st.slider(
+            "Mechanical Condition (%)", 
+            50, 100, 
+            key="mech_val",
+            disabled=(year == 2026)
+        )
 
     # Display image preview
     st.image(CAR_DATA[brand]["image"], caption=f"{brand} Reference Model", use_container_width=True)
