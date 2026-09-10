@@ -5,21 +5,20 @@ import pandas as pd
 # 1. Page Configuration & Modern CSS
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="Egyptian Used Car Predictor",
+    page_title="Egyptian Ultimate Car Valuation System",
     page_icon="🚗",
-    layout="centered",  # Optimal for mobile and desktop readability
+    layout="centered",
     initial_sidebar_state="collapsed"
 )
 
 st.markdown("""
     <style>
-    /* Global Typography & Colors */
+    /* Global Typography & Light Clean Background */
     .stApp {
         background-color: #f8fafc;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
-    /* Remove padding issues on mobile */
     .block-container {
         padding-top: 1.5rem !important;
         padding-bottom: 2rem !important;
@@ -27,7 +26,7 @@ st.markdown("""
         padding-right: 1rem !important;
     }
 
-    /* Main Title Card */
+    /* Main Title Header */
     .hero-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
@@ -52,7 +51,7 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* Price Cards */
+    /* Price Displays */
     .price-card-main {
         background: #2563eb;
         color: white;
@@ -95,26 +94,119 @@ st.markdown("""
         font-weight: 700;
         margin: 0;
     }
-
-    /* Inputs Accordion Style */
-    .stHeader {
-        background-color: transparent !important;
-    }
     </style>
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. Database
+# 2. Detailed Egyptian Market Database with Trim Specifics
 # ---------------------------------------------------------
 CAR_DATA = {
-    "Toyota": {"models": ["Corolla", "Yaris", "Fortuner", "C-HR", "RAV4", "Belta"], "base": 1150000, "mult": 1.15},
-    "Hyundai": {"models": ["Elantra CN7", "Elantra HD", "Tucson", "Accent RB", "Creta"], "base": 850000, "mult": 1.0},
-    "Kia": {"models": ["Sportage", "Cerato", "Rio", "Picanto", "Sorento"], "base": 950000, "mult": 1.05},
-    "Nissan": {"models": ["Sunny", "Sentra", "Qashqai", "Juke"], "base": 750000, "mult": 0.92},
-    "MG": {"models": ["MG 5", "MG ZS", "MG 6", "MG RX5", "MG HS"], "base": 800000, "mult": 0.95},
-    "BMW": {"models": ["320i / 330i", "520i / 530i", "X1", "X3", "X5"], "base": 2800000, "mult": 2.2},
-    "Mercedes-Benz": {"models": ["C180 / C200", "E200 / E300", "A180", "GLC"], "base": 3200000, "mult": 2.5},
-    "Skoda": {"models": ["Octavia", "Kodiaq", "Karoq", "Superb"], "base": 1350000, "mult": 1.25}
+    "Toyota": {
+        "models": {
+            "Corolla": 1500000,
+            "Yaris": 1100000,
+            "Fortuner": 3300000,
+            "C-HR": 1650000,
+            "Belta": 850000,
+            "Rumion": 900000
+        },
+        "image": "https://images.unsplash.com/photo-1629897048983-85f8dc4e4abc?auto=format&fit=crop&q=80&w=800"
+    },
+    "Hyundai": {
+        "models": {
+            "Elantra CN7": 1550000,
+            "Elantra HD": 900000,
+            "Elantra AD": 1150000,
+            "Tucson": 1950000,
+            "Accent RB": 820000,
+            "Creta": 1400000
+        },
+        "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=800"
+    },
+    "Kia": {
+        "models": {
+            "Sportage": 2050000,
+            "Cerato / Grand Cerato": 1250000,
+            "Rio": 950000,
+            "Picanto": 750000,
+            "Sorento": 3100000
+        },
+        "image": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800"
+    },
+    "Nissan": {
+        "models": {
+            "Sunny": 750000,
+            "Sentra": 950000,
+            "Qashqai": 1550000,
+            "Juke": 1150000
+        },
+        "image": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&q=80&w=800"
+    },
+    "MG": {
+        "models": {
+            "MG 5": 880000,
+            "MG ZS": 1050000,
+            "MG 6": 1250000,
+            "MG RX5 / RX5 Plus": 1450000,
+            "MG HS": 1600000
+        },
+        "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800"
+    },
+    "Chery": {
+        "models": {
+            "Arrizo 5": 780000,
+            "Tiggo 3": 850000,
+            "Tiggo 7": 1120000,
+            "Tiggo 8": 1450000,
+            "Omoda C5": 1400000
+        },
+        "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800"
+    },
+    "BMW": {
+        "models": {
+            "320i": 2900000,
+            "330i": 3500000,
+            "520i": 4200000,
+            "X1": 2600000,
+            "X3": 3900000,
+            "X5": 5800000
+        },
+        "image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=800"
+    },
+    "Mercedes-Benz": {
+        "models": {
+            "C180": 3200000,
+            "C200": 3800000,
+            "E200": 4800000,
+            "A180": 2200000,
+            "GLA": 2700000,
+            "GLC": 4500000
+        },
+        "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&q=80&w=800"
+    },
+    "Skoda": {
+        "models": {
+            "Octavia": 1750000,
+            "Kodiaq": 2450000,
+            "Karoq": 1850000,
+            "Superb": 2100000
+        },
+        "image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800"
+    },
+    "Komodo": {
+        "models": {
+            "Komodo 2.4 4x2": 480000,
+            "Komodo 2.4 4x4": 560000
+        },
+        "image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800"
+    }
+}
+
+TRIM_MULTIPLIERS = {
+    "Base Line (الفئة الأولى)": 0.92,
+    "Mid Line (الفئة الثانية / المتواسطة)": 1.0,
+    "High Line / Elegance (الفئة الأولى المجهزة)": 1.08,
+    "Topline / Sport / Luxury (أعلى فئة)": 1.15
 }
 
 # ---------------------------------------------------------
@@ -128,18 +220,19 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 4. Inputs Section (Expander for Clean UI)
+# 4. Input Configuration Section
 # ---------------------------------------------------------
-with st.expander("⚙️ **Configure Vehicle Specs & Condition**", expanded=True):
+with st.expander("⚙️ **Configure Vehicle Specs & Trim**", expanded=True):
     col_in1, col_in2 = st.columns(2)
     
     with col_in1:
         brand = st.selectbox("Car Brand", list(CAR_DATA.keys()))
-        model = st.selectbox("Car Model", CAR_DATA[brand]["models"])
+        model = st.selectbox("Car Model", list(CAR_DATA[brand]["models"].keys()))
+        trim = st.selectbox("Trim / Category Tier (فئة السيارة)", list(TRIM_MULTIPLIERS.keys()), index=1)
         year = st.slider("Model Year", 2005, 2026, 2021)
-        transmission = st.radio("Transmission", ["Automatic", "Manual"], horizontal=True)
 
     with col_in2:
+        transmission = st.radio("Transmission", ["Automatic", "Manual"], horizontal=True)
         mileage = st.number_input("Mileage (KM)", min_value=0, max_value=500000, value=60000, step=5000)
         paint_condition = st.selectbox("Body / Paint Condition", [
             "Factory Original (Fabrika)",
@@ -149,59 +242,68 @@ with st.expander("⚙️ **Configure Vehicle Specs & Condition**", expanded=True
         ])
         mechanical_condition = st.slider("Mechanical Condition (%)", 50, 100, 90)
 
-    # Advanced Specs Option
-    with st.popover("🔧 Advanced Options (Engine & Fuel)"):
+    # Car image preview
+    st.image(CAR_DATA[brand]["image"], caption=f"{brand} Reference Model", use_container_width=True)
+
+    # Advanced Specifications
+    with st.popover("🔧 Advanced Engine Options"):
         engine_cc = st.select_slider("Engine CC", options=[1000, 1200, 1400, 1500, 1600, 2000, 2500, 3000], value=1600)
         is_turbo = st.checkbox("Turbocharged Engine?", value=False)
-        hp = st.number_input("Horsepower (HP)", min_value=70, max_value=500, value=120)
         fuel_type = st.selectbox("Fuel Type", ["Petrol", "Diesel", "Hybrid", "Electric"])
-        body_type = st.selectbox("Body Style", ["Sedan", "SUV / Crossover", "Hatchback", "Coupe"])
 
 # ---------------------------------------------------------
-# 5. Calculation Logic
+# 5. Precise Market Calculation Engine
 # ---------------------------------------------------------
 current_year = 2026
 age = current_year - year
-base_price = CAR_DATA[brand]["base"] * CAR_DATA[brand]["mult"]
 
+# Model Base Price
+model_base_2026 = CAR_DATA[brand]["models"][model]
+
+# Apply Trim Multiplier
+model_price_with_trim = model_base_2026 * TRIM_MULTIPLIERS[trim]
+
+# Adjust for Turbo or Transmission
 if is_turbo:
-    base_price *= 1.10
-if body_type == "SUV / Crossover":
-    base_price *= 1.12
+    model_price_with_trim *= 1.05
+if transmission == "Manual":
+    model_price_with_trim *= 0.88
 
-base_price += (hp - 100) * 1500
+# Depreciation Curve (~3.8% yearly for clean cars)
+depreciation = min(0.60, (age * 0.038) + ((mileage / 10000) * 0.009))
+val_after_dep = model_price_with_trim * (1 - depreciation)
 
-depreciation = min(0.60, (age * 0.045) + ((mileage / 10000) * 0.012))
-val_after_dep = base_price * (1 - depreciation)
-
+# Paint Condition Penalty
 paint_rates = {
     "Factory Original (Fabrika)": 1.0,
     "Belt Repainted (Hizam)": 0.93,
     "Partial Repairs": 0.88,
-    "Fully Repainted": 0.82
+    "Fully Repainted": 0.80
 }
 val_after_paint = val_after_dep * paint_rates[paint_condition]
-final_price = max(100000, int(val_after_paint * (mechanical_condition / 100)))
+
+# Final Valuation Calculation
+final_price = max(80000, int(val_after_paint * (mechanical_condition / 100)))
 
 lower_price = int(final_price * 0.95)
 upper_price = int(final_price * 1.05)
 
 # ---------------------------------------------------------
-# 6. Clean Valuation Display
+# 6. Price Valuation Display
 # ---------------------------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Main Fair Price Metric
+# Main Fair Price Card
 st.markdown(f'''
     <div class="price-card-main">
-        <h4>Estimated Market Value</h4>
+        <h4>Estimated Market Value ({trim.split('(')[0].strip()})</h4>
         <h2>{final_price:,} EGP</h2>
     </div>
 ''', unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Min and Max Range Cards
+# Min & Max Buying Range
 col_res1, col_res2 = st.columns(2)
 with col_res1:
     st.markdown(f'''
@@ -231,7 +333,7 @@ with tab1:
         down_pay = st.number_input("Down Payment (EGP)", min_value=0, max_value=final_price, value=int(final_price * 0.3), step=25000)
         months = st.selectbox("Tenure (Months)", [12, 24, 36, 48, 60], index=2)
     with c2:
-        interest = st.slider("Interest Rate (%)", 8.0, 30.0, 20.0, step=0.5)
+        interest = st.slider("Interest Rate (%)", 8.0, 35.0, 22.0, step=0.5)
         loan = max(0, final_price - down_pay)
         r = (interest / 100) / 12
         monthly = loan * (r * (1 + r)**months) / ((1 + r)**months - 1) if r > 0 and loan > 0 else loan / months
@@ -243,10 +345,10 @@ with tab2:
     with f1:
         monthly_km = st.slider("Monthly Distance (KM)", 500, 5000, 1500, step=100)
     with f2:
-        fuel_price = st.number_input("Fuel Price / Liter (EGP)", value=15.0, step=0.5)
-        cost = (monthly_km / 100) * 8.0 * fuel_price
+        fuel_price = st.number_input("Fuel Price / Liter (EGP)", value=17.0, step=0.5)
+        cost = (monthly_km / 100) * 8.5 * fuel_price
         st.metric("Monthly Fuel Cost", f"{int(cost):,} EGP")
 
 # Footer
 st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #94a3b8; font-size: 0.8rem;'>Egyptian Used Car Valuation System • 2026</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94a3b8; font-size: 0.8rem;'>Egyptian Used Car Valuation System • Updated Precise Trim Rates</p>", unsafe_allow_html=True)
