@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ---------------------------------------------------------
-# 1. Page Configuration & Eye-Friendly Style
+# 1. Page Configuration & Modern Aesthetics
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="Egyptian Ultimate Car Valuation System",
@@ -45,15 +45,12 @@ st.markdown("""
         color: #2563eb;
         font-weight: 600;
     }
-    .brand-banner {
-        background: #f1f5f9;
-        border-radius: 12px;
-        padding: 30px;
-        text-align: center;
-        font-size: 3rem;
+    .car-image-container {
+        border-radius: 14px;
+        overflow: hidden;
         margin-top: 15px;
         margin-bottom: 10px;
-        border: 1px dashed #cbd5e1;
+        border: 1px solid #e2e8f0;
     }
     .price-card-main {
         background: #2563eb;
@@ -99,7 +96,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. Comprehensive Database with Emojis
+# 2. Comprehensive Database with Reliable Static URLs
 # ---------------------------------------------------------
 CAR_DATA = {
     "Kia": {
@@ -111,7 +108,7 @@ CAR_DATA = {
             "Sorento": 3200000,
             "Pegas": 850000
         },
-        "icon": "🚘"
+        "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80"
     },
     "Toyota": {
         "models": {
@@ -122,7 +119,7 @@ CAR_DATA = {
             "Belta": 880000,
             "Rumion": 920000
         },
-        "icon": "🚗"
+        "image": "https://images.unsplash.com/photo-1629897048983-85f8dc4e4abc?auto=format&fit=crop&w=800&q=80"
     },
     "Hyundai": {
         "models": {
@@ -133,7 +130,7 @@ CAR_DATA = {
             "Accent RB": 850000,
             "Creta": 1450000
         },
-        "icon": "🚘"
+        "image": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=800&q=80"
     },
     "Nissan": {
         "models": {
@@ -142,7 +139,7 @@ CAR_DATA = {
             "Qashqai": 1600000,
             "Juke": 1200000
         },
-        "icon": "🚙"
+        "image": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&w=800&q=80"
     },
     "MG": {
         "models": {
@@ -152,7 +149,7 @@ CAR_DATA = {
             "MG RX5 / RX5 Plus": 1500000,
             "MG HS": 1650000
         },
-        "icon": "🏎️"
+        "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80"
     },
     "Chery": {
         "models": {
@@ -162,7 +159,7 @@ CAR_DATA = {
             "Tiggo 8": 1500000,
             "Omoda C5": 1450000
         },
-        "icon": "🚙"
+        "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"
     },
     "BMW": {
         "models": {
@@ -173,7 +170,7 @@ CAR_DATA = {
             "X3": 4200000,
             "X5": 6200000
         },
-        "icon": "🏎️"
+        "image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80"
     },
     "Mercedes-Benz": {
         "models": {
@@ -184,7 +181,7 @@ CAR_DATA = {
             "GLA": 2900000,
             "GLC": 4900000
         },
-        "icon": "🚘"
+        "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80"
     },
     "Skoda": {
         "models": {
@@ -193,7 +190,7 @@ CAR_DATA = {
             "Karoq": 1950000,
             "Superb": 2250000
         },
-        "icon": "🚗"
+        "image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80"
     },
     "Peugeot": {
         "models": {
@@ -203,14 +200,14 @@ CAR_DATA = {
             "5008": 2200000,
             "508": 1800000
         },
-        "icon": "🦁"
+        "image": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80"
     },
     "Komodo": {
         "models": {
             "Komodo 2.4 4x2": 480000,
             "Komodo 2.4 4x4": 560000
         },
-        "icon": "🛻"
+        "image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80"
     }
 }
 
@@ -288,8 +285,12 @@ with st.expander("⚙️ **Configure Vehicle Specs & Trim**", expanded=True):
             disabled=(year == 2026)
         )
 
-    # Clean Brand Banner instead of unreliable external links
-    st.markdown(f'<div class="brand-banner">{CAR_DATA[brand]["icon"]} {brand} {model}</div>', unsafe_allow_html=True)
+    # Static Unsplash CDN Image Container
+    st.image(
+        CAR_DATA[brand]["image"], 
+        caption=f"{brand} Reference Model", 
+        use_container_width=True
+    )
 
     # Advanced Specifications Box
     with st.popover("🔧 Advanced Engine Options"):
