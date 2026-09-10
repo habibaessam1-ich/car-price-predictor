@@ -89,7 +89,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. Comprehensive Database with Fixed Image URLs & Prices
+# 2. Comprehensive Database with Fixed Static Images
 # ---------------------------------------------------------
 CAR_DATA = {
     "Kia": {
@@ -101,7 +101,7 @@ CAR_DATA = {
             "Sorento": 3200000,
             "Pegas": 850000
         },
-        "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/2022_Kia_Sportage_HEV_GT-Line_1.6_Front.jpg/800px-2022_Kia_Sportage_HEV_GT-Line_1.6_Front.jpg"
     },
     "Toyota": {
         "models": {
@@ -112,7 +112,7 @@ CAR_DATA = {
             "Belta": 880000,
             "Rumion": 920000
         },
-        "image": "https://images.unsplash.com/photo-1629897048983-85f8dc4e4abc?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/2019_Toyota_Corolla_Icon_Tech_VVT-i_1.8_Front.jpg/800px-2019_Toyota_Corolla_Icon_Tech_VVT-i_1.8_Front.jpg"
     },
     "Hyundai": {
         "models": {
@@ -123,7 +123,7 @@ CAR_DATA = {
             "Accent RB": 850000,
             "Creta": 1450000
         },
-        "image": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/2022_Hyundai_Tucson_SEL_FL_1.6_Front.jpg/800px-2022_Hyundai_Tucson_SEL_FL_1.6_Front.jpg"
     },
     "Nissan": {
         "models": {
@@ -132,7 +132,7 @@ CAR_DATA = {
             "Qashqai": 1600000,
             "Juke": 1200000
         },
-        "image": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/2021_Nissan_Qashqai_Tekna_1.3_Front.jpg/800px-2021_Nissan_Qashqai_Tekna_1.3_Front.jpg"
     },
     "MG": {
         "models": {
@@ -142,7 +142,7 @@ CAR_DATA = {
             "MG RX5 / RX5 Plus": 1500000,
             "MG HS": 1650000
         },
-        "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/2020_MG_HS_Excite_1.5_Front.jpg/800px-2020_MG_HS_Excite_1.5_Front.jpg"
     },
     "Chery": {
         "models": {
@@ -152,7 +152,7 @@ CAR_DATA = {
             "Tiggo 8": 1500000,
             "Omoda C5": 1450000
         },
-        "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Chery_Tiggo_7_Pro_001.jpg/800px-Chery_Tiggo_7_Pro_001.jpg"
     },
     "BMW": {
         "models": {
@@ -163,7 +163,7 @@ CAR_DATA = {
             "X3": 4200000,
             "X5": 6200000
         },
-        "image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/2019_BMW_320i_M_Sport_2.0_Front.jpg/800px-2019_BMW_320i_M_Sport_2.0_Front.jpg"
     },
     "Mercedes-Benz": {
         "models": {
@@ -174,7 +174,7 @@ CAR_DATA = {
             "GLA": 2900000,
             "GLC": 4900000
         },
-        "image": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/2022_Mercedes-Benz_C200_AMG_Line_2.0_Front.jpg/800px-2022_Mercedes-Benz_C200_AMG_Line_2.0_Front.jpg"
     },
     "Skoda": {
         "models": {
@@ -183,7 +183,7 @@ CAR_DATA = {
             "Karoq": 1950000,
             "Superb": 2250000
         },
-        "image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/2020_Skoda_Octavia_SE_L_First_Edition_1.5_Front.jpg/800px-2020_Skoda_Octavia_SE_L_First_Edition_1.5_Front.jpg"
     },
     "Peugeot": {
         "models": {
@@ -193,14 +193,14 @@ CAR_DATA = {
             "5008": 2200000,
             "508": 1800000
         },
-        "image": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/2021_Peugeot_3008_GT_Line_1.2_Front.jpg/800px-2021_Peugeot_3008_GT_Line_1.2_Front.jpg"
     },
     "Komodo": {
         "models": {
             "Komodo 2.4 4x2": 480000,
             "Komodo 2.4 4x4": 560000
         },
-        "image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/2022_Kia_Sportage_HEV_GT-Line_1.6_Front.jpg/800px-2022_Kia_Sportage_HEV_GT-Line_1.6_Front.jpg"
     }
 }
 
