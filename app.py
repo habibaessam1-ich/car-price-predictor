@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ---------------------------------------------------------
-# 1. Page Configuration & Modern Aesthetics
+# 1. Page Configuration & Eye-Friendly Style
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="Egyptian Ultimate Car Valuation System",
@@ -85,11 +85,19 @@ st.markdown("""
         font-weight: 700;
         margin: 0;
     }
+    .car-img-container {
+        width: 100%;
+        border-radius: 12px;
+        max-height: 380px;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        margin-top: 10px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. Database with Direct, Fixed Wikimedia Car Images
+# 2. Database with Stable CORS-Safe Car Images
 # ---------------------------------------------------------
 CAR_DATA = {
     "Kia": {
@@ -101,8 +109,7 @@ CAR_DATA = {
             "Sorento": 3200000,
             "Pegas": 850000
         },
-        # صورة كيا سبورتاج حقيقية ومباشرة
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/2022_Kia_Sportage_GT-Line_S_HEV_Automatic_1.6_Front.jpg/800px-2022_Kia_Sportage_GT-Line_S_HEV_Automatic_1.6_Front.jpg"
+        "image": "https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Toyota": {
         "models": {
@@ -113,7 +120,7 @@ CAR_DATA = {
             "Belta": 880000,
             "Rumion": 920000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/2019_Toyota_Corolla_Icon_Tech_VVT-i_1.8_Front.jpg/800px-2019_Toyota_Corolla_Icon_Tech_VVT-i_1.8_Front.jpg"
+        "image": "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Hyundai": {
         "models": {
@@ -124,7 +131,7 @@ CAR_DATA = {
             "Accent RB": 850000,
             "Creta": 1450000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/2022_Hyundai_Tucson_SEL_FL_1.6_Front.jpg/800px-2022_Hyundai_Tucson_SEL_FL_1.6_Front.jpg"
+        "image": "https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Nissan": {
         "models": {
@@ -133,7 +140,7 @@ CAR_DATA = {
             "Qashqai": 1600000,
             "Juke": 1200000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/2021_Nissan_Qashqai_Tekna_1.3_Front.jpg/800px-2021_Nissan_Qashqai_Tekna_1.3_Front.jpg"
+        "image": "https://images.pexels.com/photos/1005633/pexels-photo-1005633.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "MG": {
         "models": {
@@ -143,7 +150,7 @@ CAR_DATA = {
             "MG RX5 / RX5 Plus": 1500000,
             "MG HS": 1650000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/2020_MG_HS_Excite_1.5_Front.jpg/800px-2020_MG_HS_Excite_1.5_Front.jpg"
+        "image": "https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Chery": {
         "models": {
@@ -153,7 +160,7 @@ CAR_DATA = {
             "Tiggo 8": 1500000,
             "Omoda C5": 1450000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Chery_Tiggo_7_Pro_001.jpg/800px-Chery_Tiggo_7_Pro_001.jpg"
+        "image": "https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "BMW": {
         "models": {
@@ -164,7 +171,7 @@ CAR_DATA = {
             "X3": 4200000,
             "X5": 6200000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/2019_BMW_320i_M_Sport_2.0_Front.jpg/800px-2019_BMW_320i_M_Sport_2.0_Front.jpg"
+        "image": "https://images.pexels.com/photos/892522/pexels-photo-892522.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Mercedes-Benz": {
         "models": {
@@ -175,7 +182,7 @@ CAR_DATA = {
             "GLA": 2900000,
             "GLC": 4900000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/2022_Mercedes-Benz_C200_AMG_Line_2.0_Front.jpg/800px-2022_Mercedes-Benz_C200_AMG_Line_2.0_Front.jpg"
+        "image": "https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Skoda": {
         "models": {
@@ -184,7 +191,7 @@ CAR_DATA = {
             "Karoq": 1950000,
             "Superb": 2250000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/2020_Skoda_Octavia_SE_L_First_Edition_1.5_Front.jpg/800px-2020_Skoda_Octavia_SE_L_First_Edition_1.5_Front.jpg"
+        "image": "https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Peugeot": {
         "models": {
@@ -194,14 +201,14 @@ CAR_DATA = {
             "5008": 2200000,
             "508": 1800000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/2021_Peugeot_3008_GT_Line_1.2_Front.jpg/800px-2021_Peugeot_3008_GT_Line_1.2_Front.jpg"
+        "image": "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     "Komodo": {
         "models": {
             "Komodo 2.4 4x2": 480000,
             "Komodo 2.4 4x4": 560000
         },
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/2022_Kia_Sportage_GT-Line_S_HEV_Automatic_1.6_Front.jpg/800px-2022_Kia_Sportage_GT-Line_S_HEV_Automatic_1.6_Front.jpg"
+        "image": "https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=800"
     }
 }
 
@@ -279,15 +286,13 @@ with st.expander("⚙️ **Configure Vehicle Specs & Trim**", expanded=True):
             disabled=(year == 2026)
         )
 
-    # Display image with safe fallback
-    try:
-        st.image(
-            CAR_DATA[brand]["image"], 
-            caption=f"{brand} {model} Reference Model", 
-            use_container_width=True
-        )
-    except Exception:
-        st.markdown(f"### 🚘 {brand} {model}")
+    # Robust HTML Image Renderer with direct fallback logic
+    img_url = CAR_DATA[brand]["image"]
+    st.markdown(
+        f'<img src="{img_url}" class="car-img-container" alt="{brand} {model}">', 
+        unsafe_allow_html=True
+    )
+    st.caption(f"{brand} {model} Reference Model")
 
     # Advanced Specifications Box
     with st.popover("🔧 Advanced Engine Options"):
