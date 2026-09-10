@@ -90,7 +90,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. Comprehensive Database with Local Image Paths
+# 2. Comprehensive Database with Local Assets & Guaranteed Fallback URLs
 # ---------------------------------------------------------
 CAR_DATA = {
     "Kia": {
@@ -102,7 +102,8 @@ CAR_DATA = {
             "Sorento": 3200000,
             "Pegas": 850000
         },
-        "image": "assets/kia.jpg"
+        "local_image": "assets/kia.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?auto=format&fit=crop&w=1000&q=80"
     },
     "Toyota": {
         "models": {
@@ -113,7 +114,8 @@ CAR_DATA = {
             "Belta": 880000,
             "Rumion": 920000
         },
-        "image": "assets/toyota.jpg"
+        "local_image": "assets/toyota.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1000&q=80"
     },
     "Hyundai": {
         "models": {
@@ -124,7 +126,8 @@ CAR_DATA = {
             "Accent RB": 850000,
             "Creta": 1450000
         },
-        "image": "assets/hyundai.jpg"
+        "local_image": "assets/hyundai.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1000&q=80"
     },
     "Nissan": {
         "models": {
@@ -133,7 +136,8 @@ CAR_DATA = {
             "Qashqai": 1600000,
             "Juke": 1200000
         },
-        "image": "assets/nissan.jpg"
+        "local_image": "assets/nissan.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1000&q=80"
     },
     "MG": {
         "models": {
@@ -143,7 +147,8 @@ CAR_DATA = {
             "MG RX5 / RX5 Plus": 1500000,
             "MG HS": 1650000
         },
-        "image": "assets/mg.jpg"
+        "local_image": "assets/mg.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1000&q=80"
     },
     "Chery": {
         "models": {
@@ -153,7 +158,8 @@ CAR_DATA = {
             "Tiggo 8": 1500000,
             "Omoda C5": 1450000
         },
-        "image": "assets/chery.jpg"
+        "local_image": "assets/chery.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1000&q=80"
     },
     "BMW": {
         "models": {
@@ -164,7 +170,8 @@ CAR_DATA = {
             "X3": 4200000,
             "X5": 6200000
         },
-        "image": "assets/bmw.jpg"
+        "local_image": "assets/bmw.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1000&q=80"
     },
     "Mercedes-Benz": {
         "models": {
@@ -175,7 +182,8 @@ CAR_DATA = {
             "GLA": 2900000,
             "GLC": 4900000
         },
-        "image": "assets/mercedes.jpg"
+        "local_image": "assets/mercedes.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80"
     },
     "Skoda": {
         "models": {
@@ -184,7 +192,8 @@ CAR_DATA = {
             "Karoq": 1950000,
             "Superb": 2250000
         },
-        "image": "assets/skoda.jpg"
+        "local_image": "assets/skoda.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1000&q=80"
     },
     "Peugeot": {
         "models": {
@@ -194,14 +203,16 @@ CAR_DATA = {
             "5008": 2200000,
             "508": 1800000
         },
-        "image": "assets/peugeot.jpg"
+        "local_image": "assets/peugeot.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1000&q=80"
     },
     "Komodo": {
         "models": {
             "Komodo 2.4 4x2": 480000,
             "Komodo 2.4 4x4": 560000
         },
-        "image": "assets/komodo.jpg"
+        "local_image": "assets/komodo.jpg",
+        "fallback_image": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1000&q=80"
     }
 }
 
@@ -248,7 +259,7 @@ with st.expander("⚙️ **Configure Vehicle Specs & Trim**", expanded=True):
         
         year = st.slider(
             "Model Year", 
-            2005, 2026, 2021, 
+            2005, 2026, 2026, 
             key="selected_year", 
             on_change=handle_year_change
         )
@@ -279,12 +290,16 @@ with st.expander("⚙️ **Configure Vehicle Specs & Trim**", expanded=True):
             disabled=(year == 2026)
         )
 
-    # Local Image Display with Fallback Banner
-    img_path = CAR_DATA[brand]["image"]
-    if os.path.exists(img_path):
-        st.image(img_path, caption=f"{brand} {model} Reference Model", use_container_width=True)
+    # ---------------------------------------------------------
+    # Image Display Logic (Local First, Guaranteed Fallback Second)
+    # ---------------------------------------------------------
+    local_img = CAR_DATA[brand]["local_image"]
+    fallback_img = CAR_DATA[brand]["fallback_image"]
+    
+    if os.path.exists(local_img):
+        st.image(local_img, caption=f"{brand} {model} Reference Model", use_container_width=True)
     else:
-        st.info(f"📍 يرجى وضع صورة {brand} داخل مجلد assets لتظهر هنا ({img_path})")
+        st.image(fallback_img, caption=f"{brand} {model} Reference Model", use_container_width=True)
 
     # Advanced Specifications Box
     with st.popover("🔧 Advanced Engine Options"):
@@ -306,7 +321,6 @@ if is_turbo:
 if transmission == "Manual":
     model_price_with_trim *= 0.88
 
-# Depreciation logic: zero depreciation if current year (2026)
 if age == 0:
     depreciation = 0.0
 else:
