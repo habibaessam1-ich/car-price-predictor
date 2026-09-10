@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 
 # ---------------------------------------------------------
@@ -85,19 +86,11 @@ st.markdown("""
         font-weight: 700;
         margin: 0;
     }
-    .car-img-container {
-        width: 100%;
-        border-radius: 12px;
-        max-height: 380px;
-        object-fit: cover;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        margin-top: 10px;
-    }
     </style>
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. Database with Stable CORS-Safe Car Images
+# 2. Comprehensive Database with Local Image Paths
 # ---------------------------------------------------------
 CAR_DATA = {
     "Kia": {
@@ -109,7 +102,7 @@ CAR_DATA = {
             "Sorento": 3200000,
             "Pegas": 850000
         },
-        "image": "https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/kia.jpg"
     },
     "Toyota": {
         "models": {
@@ -120,7 +113,7 @@ CAR_DATA = {
             "Belta": 880000,
             "Rumion": 920000
         },
-        "image": "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/toyota.jpg"
     },
     "Hyundai": {
         "models": {
@@ -131,7 +124,7 @@ CAR_DATA = {
             "Accent RB": 850000,
             "Creta": 1450000
         },
-        "image": "https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/hyundai.jpg"
     },
     "Nissan": {
         "models": {
@@ -140,7 +133,7 @@ CAR_DATA = {
             "Qashqai": 1600000,
             "Juke": 1200000
         },
-        "image": "https://images.pexels.com/photos/1005633/pexels-photo-1005633.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/nissan.jpg"
     },
     "MG": {
         "models": {
@@ -150,7 +143,7 @@ CAR_DATA = {
             "MG RX5 / RX5 Plus": 1500000,
             "MG HS": 1650000
         },
-        "image": "https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/mg.jpg"
     },
     "Chery": {
         "models": {
@@ -160,7 +153,7 @@ CAR_DATA = {
             "Tiggo 8": 1500000,
             "Omoda C5": 1450000
         },
-        "image": "https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/chery.jpg"
     },
     "BMW": {
         "models": {
@@ -171,7 +164,7 @@ CAR_DATA = {
             "X3": 4200000,
             "X5": 6200000
         },
-        "image": "https://images.pexels.com/photos/892522/pexels-photo-892522.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/bmw.jpg"
     },
     "Mercedes-Benz": {
         "models": {
@@ -182,7 +175,7 @@ CAR_DATA = {
             "GLA": 2900000,
             "GLC": 4900000
         },
-        "image": "https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/mercedes.jpg"
     },
     "Skoda": {
         "models": {
@@ -191,7 +184,7 @@ CAR_DATA = {
             "Karoq": 1950000,
             "Superb": 2250000
         },
-        "image": "https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/skoda.jpg"
     },
     "Peugeot": {
         "models": {
@@ -201,14 +194,14 @@ CAR_DATA = {
             "5008": 2200000,
             "508": 1800000
         },
-        "image": "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/peugeot.jpg"
     },
     "Komodo": {
         "models": {
             "Komodo 2.4 4x2": 480000,
             "Komodo 2.4 4x4": 560000
         },
-        "image": "https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "image": "assets/komodo.jpg"
     }
 }
 
@@ -286,13 +279,12 @@ with st.expander("⚙️ **Configure Vehicle Specs & Trim**", expanded=True):
             disabled=(year == 2026)
         )
 
-    # Robust HTML Image Renderer with direct fallback logic
-    img_url = CAR_DATA[brand]["image"]
-    st.markdown(
-        f'<img src="{img_url}" class="car-img-container" alt="{brand} {model}">', 
-        unsafe_allow_html=True
-    )
-    st.caption(f"{brand} {model} Reference Model")
+    # Local Image Display with Fallback Banner
+    img_path = CAR_DATA[brand]["image"]
+    if os.path.exists(img_path):
+        st.image(img_path, caption=f"{brand} {model} Reference Model", use_container_width=True)
+    else:
+        st.info(f"📍 يرجى وضع صورة {brand} داخل مجلد assets لتظهر هنا ({img_path})")
 
     # Advanced Specifications Box
     with st.popover("🔧 Advanced Engine Options"):
